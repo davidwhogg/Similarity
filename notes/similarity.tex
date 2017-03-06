@@ -1,9 +1,33 @@
 \documentclass[12pt,letterpaper]{article}
 
-\begin{document}
+\newcommand{\documentname}{\textsl{Note}}
+
+\begin{document}\sloppy\sloppypar\raggedbottom\frenchspacing
 
 \section*{\raggedright How similar are two noisily observed vectors?}
 
-Hello World!
+Imagine that $y_1$ and $y_2$ are two observed data points. Think of
+them as $D$-dimensional vectors in a vector space. They could be two
+spectra of two stars (Hawkins's problem), or they could be the
+detailed element abundances for two stars (Ness's problem). How can we
+tell if the two objects observed are intrinsically identical? Would
+they appear identical if we had better data?
+
+One option would be to think of making two hypotheses, to wit, ``H1:
+The two objects are identical'', and ``H2: The two objects are
+different''. Then we could compute the marginalized likelihoods of
+these two hypotheses under some priors over the nuisance parameters of
+relevance. That's sensible (and more-or-less what we did in S. M. Oh's
+paper).
+
+Another option would be to convert this problem into one of parameter
+estimation: That is, compute a marginalized likelihood or marginalized
+posterior probability density (pdf) for the \emph{difference} between
+the two objects, and see if that likelihood or posterior pdf puts
+significant density on zero---on a null or vanishing difference
+vector.
+
+For various reasons that are (perhaps) badly justified, we are going
+to take the second approach in this \documentname...HOGG
 
 \end{document}
