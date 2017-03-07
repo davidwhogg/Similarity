@@ -1,11 +1,36 @@
 \documentclass[12pt,letterpaper]{article}
 
+% typography
 \newcommand{\documentname}{\textsl{Note}}
+
+% math
+\newcommand{\transpose}[1]{{#1}^{\mathsf{T}}}
+\newcommand{\inverse}[1]{{#1}^{-1}}
+\newcommand{\given}{\,|\,}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\normal}{\mathcal{N}}
 
 \begin{document}\sloppy\sloppypar\raggedbottom\frenchspacing
 
 \section*{\raggedright How similar are two noisily observed vectors?}
 
+\noindent
+\textbf{David W. Hogg}\\
+\textsl{NYU, Flatiron, \& MPIA}
+
+\bigskip
+
+\paragraph{Abstract:}
+I present a general (although assumption-laden) method for asking the
+question: Are two independently and noisily observed objects in fact
+identical? My approach is to turn this question into a parameter
+estimation, and then post-process the posterior beliefs about the
+estimated parameter. It makes heavy use of Gaussians (quadratic forms
+in the log) for their mathematical simplicity.
+
+\bigskip
+
+\paragraph{Introduction:}
 Imagine that $y_1$ and $y_2$ are two observed data points. Think of
 them as $D$-dimensional vectors in a vector space. They could be two
 spectra of two stars (Hawkins's problem), or they could be the
@@ -28,6 +53,93 @@ significant density on zero---on a null or vanishing difference
 vector.
 
 For various reasons that are (perhaps) badly justified, we are going
-to take the second approach in this \documentname...HOGG
+to take the second approach in this \documentname. That is, we are
+going to estimate the difference between the objects given their
+(presumed noisy) measurements, and find out if that difference is
+consistent with zero.
+
+Before we start, one side note: I usually recommend that one just
+compute chi-squared between the vectors. This is defined as
+\begin{eqnarray}
+\chi^2 &=&
+\transpose{[y_1 - y_2]}\cdot\inverse{[C_1 + C_2]}\cdot [y_1 - y_2] \quad ,
+\end{eqnarray}
+where, implicitly, $y_1$ and $y_2$ are $D$-dimensional column vectors,
+and $C_1$ and $C_2$ are the $D\times D$ covariance matrices that
+express our beliefs about the noise variance on the measurements $y_1$
+and $y_2$. In this case (that is, if you just compute $\chi^2$) we say
+that the two objects are identical if the $\chi^2$ is below some
+threshold. That is simple, easy, and probabilistically
+justifiable. The objections are manifold. One is that, as the data get
+better (the determinants of the $C_1$ and $C_2$ matrices get smaller),
+it becomes increasingly harder to conclude similarity or
+identicality. To this I say: \emph{Duh!} That will be true of any
+correct method. Another objection is that $\chi^2$ treats all elements
+of the data (all directions in the vector space) identically, or at
+least weights them by their measurement quality rather than their
+\emph{usefulness for determining dissimilarity}. If some dimensions
+are better than others for determining identicality, $\chi^2$ is blind
+to that. That is a significant objection, and the one I
+address---below!---in this \documentname.
+
+\paragraph{Assumptions:}
+I am going to make the following assumptions, each one of which is
+questionable and unpleasant, but each one of which improves our
+computational tractability.
+\begin{enumerate}\itemsep0ex
+\item \emph{Noise:} Observed vectors $y_1$ and $y_2$ are noisy
+  measurements of some latent, unobserved \emph{true} vectors $x_1$
+  and $x_2$, and the differences between the observed and true vectors
+  are drawn from a $D$-dimensional Gaussian distribution with zero
+  mean and known variance tensors $C_1$ and $C_2$, respectively. The
+  noise draws are independent (but not identically distributed). There
+  are no outliers or non-Gaussianities, and the variance tensors are
+  not just known but correct.
+\item \emph{Prior:} The true vectors are drawn independently from a
+  Gaussian distribution of mean $\mu$ and variance tensor $V$. This
+  variance tensor might be low-rank. By some algorithm (PCA or HMF,
+  for example), magic, or intuition, the mean vector $\mu$ and
+  variance tensor $V$ are known in advance.
+\end{enumerate}
+
+The first thing we are going to do is diagonalize the prior variance
+tensor $V$. We are going to do this so we develop an approach that is
+computationally feasible when $V$ is low-rank, and numerically stable
+when $V$ has a bad condition number. We will write
+\begin{eqnarray}
+V &\equiv& R\cdot\Lambda\cdot\transpose{R} \quad ,
+\end{eqnarray}
+where $R$ is a $D\times K$ matrix of the $K$ (and $K\leq D$)
+eigenvectors of $V$ that have positive eigenvalues, and $\Lambda$ is
+the diagonal $K\times K$ tensor that has the eigenvalues on its
+diagonal. By the assumption that the true vectors are drawn from the
+Gaussian with this variance and mean $\mu$, we can (without any loss
+of generality) write the \emph{true} vectors $x_1$ and $x_2$ as a sum
+and different of coefficient vectors in the $K$-dimensional space as
+follows:
+\begin{eqnarray}
+x_1 &=& R\cdot[a + b] + \mu \\
+x_2 &=& R\cdot[a - b] + \mu \quad ,
+\end{eqnarray}
+where the $D$-vector $R\cdot a + \mu$ is the mean of $x_1$ and $x_2$,
+and $R\cdot b$ is the half-difference between $x_1$ and $x_2$. This is
+a change of variables.  In this change of variables, the question of
+``are $y_1$ and $y_2$ identical?'' will convert to the question of
+``is the posterior pdf for $b$ consistent with $b=0$?''. We need a
+posterior pdf for $b$!
+
+\paragraph{Bayesian inference:}
+Under these assumptions (above), there is only one thing to do:
+Compute the posterior pdf for $b$, marginalizing out $a$, given the
+data $y_1$ and $y_2$, and our assumptions (which are detailed, and
+include the objects $C_1$, $C_2$, $\mu$, and $V$).
+\begin{eqnarray}
+p(b\given y_1,y_2) &=& \int p(a,b\given y_1,y_2)\,\dd a \\
+p(a,b\given y_1,y_2) &=& \frac{1}{Z}\,p(a,b)\,p(y_1\given a,b)\,p(y_2\given a,b) \\
+p(a,b) &=& \normal(a+b\given 0,V)\,\normal(a-b\given 0,V) \\
+p(y_1\given a,b) &=& \normal(y_1\given R\cdot[a+b]+\mu,C_1) \\
+p(y_2\given a,b) &=& \normal(y_2\given R\cdot[a-b]+\mu,C_2), \quad
+\end{eqnarray}
+where foo
 
 \end{document}
