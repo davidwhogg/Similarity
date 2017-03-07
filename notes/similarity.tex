@@ -109,13 +109,13 @@ when $V$ has a bad condition number. We will write
 \begin{eqnarray}
 V &\equiv& R\cdot\Lambda\cdot\transpose{R} \quad ,
 \end{eqnarray}
-where $R$ is a $D\times K$ matrix of the $K$ (and $K\leq D$)
-eigenvectors of $V$ that have positive eigenvalues, and $\Lambda$ is
-the diagonal $K\times K$ tensor that has the eigenvalues on its
-diagonal. By the assumption that the true vectors are drawn from the
-Gaussian with this variance and mean $\mu$, we can (without any loss
-of generality) write the \emph{true} vectors $x_1$ and $x_2$ as a sum
-and different of coefficient vectors in the $K$-dimensional space as
+where $R$ is a $D\times K$ matrix of the $K$ ($K\leq D$) eigenvectors
+of $V$ that have positive eigenvalues, and $\Lambda$ is the diagonal
+$K\times K$ tensor that has the eigenvalues on its diagonal. By the
+assumption that the true vectors are drawn from the Gaussian with this
+variance and mean $\mu$, we can (without any loss of generality) write
+the \emph{true} vectors $x_1$ and $x_2$ as a sum and difference of
+coefficient vectors $a$ and $b$ in the $K$-dimensional space as
 follows:
 \begin{eqnarray}
 x_1 &=& R\cdot[a + b] + \mu \\
@@ -136,10 +136,27 @@ include the objects $C_1$, $C_2$, $\mu$, and $V$).
 \begin{eqnarray}
 p(b\given y_1,y_2) &=& \int p(a,b\given y_1,y_2)\,\dd a \\
 p(a,b\given y_1,y_2) &=& \frac{1}{Z}\,p(a,b)\,p(y_1\given a,b)\,p(y_2\given a,b) \\
-p(a,b) &=& \normal(a+b\given 0,V)\,\normal(a-b\given 0,V) \\
+p(a,b) &=& \normal(a+b\given 0,\Lambda)\,\normal(a-b\given 0,\Lambda) \\
 p(y_1\given a,b) &=& \normal(y_1\given R\cdot[a+b]+\mu,C_1) \\
 p(y_2\given a,b) &=& \normal(y_2\given R\cdot[a-b]+\mu,C_2), \quad
 \end{eqnarray}
-where foo
+where the integral is over all values of $a$, the normalization
+constant $Z$ can be ignored for now, and the function $\normal(x\given
+m,v)$ is the Gaussian pdf for $x$ given mean $m$ and variance
+$v$. Switching to the log (and making use of the magic of Gaussians),
+\begin{eqnarray}
+\ln p(a,b\given y_1,y_2) &=&
+  -\frac{1}{2}\,\transpose{[a+b]}\cdot\inverse{\Lambda}\cdot [a+b]
+  -\frac{1}{2}\,\transpose{[a-b]}\cdot\inverse{\Lambda}\cdot [a-b] \nonumber\\
+  &&
+  -\frac{1}{2}\,\transpose{[y_1-R\cdot(a+b)-\mu]}\cdot\inverse{C_1}\cdot [y_1-R\cdot(a+b)-\mu] \nonumber\\
+  &&
+  -\frac{1}{2}\,\transpose{[y_2-R\cdot(a-b)-\mu]}\cdot\inverse{C_2}\cdot [y_2-R\cdot(a-b)-\mu] \nonumber\\
+  &&
+  + Q \quad ,
+\end{eqnarray}
+where $Q$ is a constant that doesn't matter to our inference. All we
+have to do now is complete the square, do the $a$ integral, and look
+at the $b$-dependence of the result.
 
 \end{document}
