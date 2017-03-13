@@ -6,6 +6,7 @@
 % math
 \newcommand{\transpose}[1]{{#1}^{\mathsf{T}}}
 \newcommand{\inverse}[1]{{#1}^{-1}}
+\renewcommand{\det}[1]{||{#1}||}
 \newcommand{\given}{\,|\,}
 \newcommand{\dd}{\mathrm{d}}
 \newcommand{\normal}{\mathcal{N}}
@@ -171,16 +172,29 @@ unrealistic but comforting case of $C_1=C_2\equiv C$; that is, the case in
 which both objects are observed with very similar measurement noise.
 In this case, the $a$-marginalized posterior becomes
 \begin{eqnarray}
-\ln p(b\given y_1,y2) &=&
-  -\frac{1}{2} \transpose{[b-\beta]}\cdot\inverse{W}\cdot [b-\beta]
+\ln p(b\given y_1,y_2) &=&
+  -\frac{1}{2}\,\transpose{[b-\beta]}\cdot\inverse{W}\cdot [b-\beta]
   + Z \\
 \inverse{W} &\equiv&
-  2\,\inverse{\lambda} + 2\,\inverse{C} \\
+  2\,\inverse{\Lambda} + 2\,\transpose{R}\cdot\inverse{C}\cdot R \\
 \beta &\equiv&
-  W\cdot\transpose{R}\cdot\inverse{C}\cdot [y_1 - y_2]
+  W\cdot\transpose{R}\cdot\inverse{C}\cdot [y_1 - y_2] \\
+Z &\equiv&
+  -\ln\det{2\pi\,\Lambda}
 \quad ,
 \end{eqnarray}
-where $Z$ is a normalization constant that doesn't matter to our
-inference.
+where $Z$ is a normalization constant that ensures a unit integral in
+the $b$ space. Note that this solution has the very nice property that
+if $R$ is not square---that is, the prior variance is low rank---all
+computations are done in the lower-dimension basis, with the operator
+$W\cdot\transpose{R}\cdot\inverse{C}$ projecting the data difference
+$[y_1-y_2]$ to the lower-dimension basis.
+
+In terms of generating a scalar: One option is the \emph{value} of
+this log probability $\ln p(b\given y_1,y_2)$ evaluated at $b=0$. That
+has lots of good properties, including that of being probabilistically
+justified, and that of not depending incredibly strongly on the prior
+variance $\Lambda$ (especially when the data are high in
+signal-to-noise).
 
 \end{document}
