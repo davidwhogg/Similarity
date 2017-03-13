@@ -156,7 +156,31 @@ $v$. Switching to the log (and making use of the magic of Gaussians),
   + Q \quad ,
 \end{eqnarray}
 where $Q$ is a constant that doesn't matter to our inference. All we
-have to do now is complete the square, exponentiate, do the $a$
-integral, and look at the $b$-dependence of the result.
+have to do now is complete the square for $a$, exponentiate, do the
+$a$ integral, and look at the $b$-dependence of the result.
+This result is also quadratic in $b$, so really we complete the square
+in $a$ and then take the constant term, and complete the square for
+\emph{that} in $b$.
+
+When we do the double completion of squares, we get an absolute
+hellacious mess\footnote{Yes, I really do have this worked out in my
+  orange notebook, under the date 2017-03-13, with only a few
+  uncertain signs.}.
+One reaction to this mess is to consider the
+unrealistic but comforting case of $C_1=C_2\equiv C$; that is, the case in
+which both objects are observed with very similar measurement noise.
+In this case, the $a$-marginalized posterior becomes
+\begin{eqnarray}
+\ln p(b\given y_1,y2) &=&
+  -\frac{1}{2} \transpose{[b-\beta]}\cdot\inverse{W}\cdot [b-\beta]
+  + Z \\
+\inverse{W} &\equiv&
+  2\,\inverse{\lambda} + 2\,\inverse{C} \\
+\beta &\equiv&
+  W\cdot\transpose{R}\cdot\inverse{C}\cdot [y_1 - y_2]
+\quad ,
+\end{eqnarray}
+where $Z$ is a normalization constant that doesn't matter to our
+inference.
 
 \end{document}
