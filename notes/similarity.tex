@@ -25,11 +25,11 @@
 I present a general (although assumption-laden) method for asking the
 question: Are two independently and noisily observed objects in fact
 identical? My approach is to turn this question into a parameter
-estimation, and then post-process the posterior beliefs about the
-estimated parameter. It makes heavy use of Gaussians (quadratic forms
-in the log) for their mathematical simplicity.
-
-\bigskip
+estimation, estimating the (latent) difference between the objects,
+and evaluating the posterior density at vanishing difference. The
+approach makes heavy use of Gaussians (quadratic forms in the log) for
+their mathematical simplicity. In a sensible limit, the answer reduces
+to pure chi-squared difference between the observations..
 
 \paragraph{Introduction:}
 Imagine that $y_1$ and $y_2$ are two observed data points. Think of
@@ -64,6 +64,7 @@ compute chi-squared between the vectors. This is defined as
 \begin{eqnarray}
 \chi^2 &=&
 \transpose{[y_1 - y_2]}\cdot\inverse{[C_1 + C_2]}\cdot [y_1 - y_2] \quad ,
+\label{eq:chisquared}
 \end{eqnarray}
 where, implicitly, $y_1$ and $y_2$ are $D$-dimensional column vectors,
 and $C_1$ and $C_2$ are the $D\times D$ covariance matrices that
@@ -189,9 +190,9 @@ with the operator $W\cdot\transpose{R}\cdot\inverse{C}$ projecting the
 data difference $[y_1-y_2]$ to the (possibly) lower-dimension basis
 where the intrinsic variance $V$ is diagonal.
 
-In terms of generating a scalar: One option is the \emph{value} of
-this log probability $\ln p(b\given y_1,y_2)$ evaluated at $b=0$, to
-wit the scalar $Q$:
+In terms of generating a scalar: The option we opened with, above, is
+to evaluate this log probability $\ln p(b\given y_1,y_2)$ at zero
+separation $b=0$. That is, to use the scalar $Q$:
 \begin{eqnarray}
 Q &\equiv&
   -\frac{1}{2}\,\transpose{\beta}\cdot\inverse{W}\cdot\beta
@@ -203,8 +204,12 @@ This scalar $Q$ has lots of good properties, including that of being
 probabilistically justified, and that of not depending incredibly
 strongly on the prior variance $\Lambda$ (especially when the data are
 high in signal-to-noise). Another good (and surprising) property is
-that it becomes exactly $-\chi^2/2$ (plus a constant) when the
+that it becomes exactly $-\chi^2/2$ (plus a constant), where $\chi^2$
+is defined above in (\ref{eq:chisquared}), precisely when the
 measurements are better than the prior variance along all directions,
-and the prior variance is full-rank.
+and the prior variance is full-rank (so $\transpose{R}\cdot R$ is the
+identity).
+
+So we weren't so wrong to be using $\chi^2$ in the first place.
 
 \end{document}
