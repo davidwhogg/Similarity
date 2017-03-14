@@ -154,9 +154,9 @@ $v$. Switching to the log (and making use of the magic of Gaussians),
   &&
   -\frac{1}{2}\,\transpose{[y_2-R\cdot(a-b)-\mu]}\cdot\inverse{C_2}\cdot [y_2-R\cdot(a-b)-\mu] \nonumber\\
   &&
-  + Q \quad ,
+  + Z \quad ,
 \end{eqnarray}
-where $Q$ is a constant that doesn't matter to our inference. All we
+where $Z$ is a constant that doesn't matter to our inference. All we
 have to do now is complete the square for $a$, exponentiate, do the
 $a$ integral, and look at the $b$-dependence of the result.
 This result is also quadratic in $b$, so really we complete the square
@@ -174,30 +174,37 @@ In this case, the $a$-marginalized posterior becomes
 \begin{eqnarray}
 \ln p(b\given y_1,y_2) &=&
   -\frac{1}{2}\,\transpose{[b-\beta]}\cdot\inverse{W}\cdot [b-\beta]
-  + Z \\
+  -\frac{1}{2}\,\ln\det{2\pi\,W} \\
 \inverse{W} &\equiv&
   2\,\inverse{\Lambda} + 2\,\transpose{R}\cdot\inverse{C}\cdot R \\
 \beta &\equiv&
-  W\cdot\transpose{R}\cdot\inverse{C}\cdot [y_1 - y_2] \\
-Z &\equiv&
-  -\ln\det{2\pi\,\Lambda}
+  W\cdot\transpose{R}\cdot\inverse{C}\cdot [y_1 - y_2]
 \quad ,
 \end{eqnarray}
-where $Z$ is a normalization constant that ensures a unit integral in
-the $b$ space. Note that this solution has the very nice property that
-if $R$ is not square---that is, the prior variance is low rank---all
-computations are done in the lower-dimension basis, with the operator
-$W\cdot\transpose{R}\cdot\inverse{C}$ projecting the data difference
-$[y_1-y_2]$ to the lower-dimension basis.
+where the log-det term is a normalization constant that ensures a unit
+integral in the $b$ space. Note that this solution has the very nice
+property that if $R$ is not square---that is, the prior variance is
+low rank---all computations are done in the lower-dimension basis,
+with the operator $W\cdot\transpose{R}\cdot\inverse{C}$ projecting the
+data difference $[y_1-y_2]$ to the (possibly) lower-dimension basis
+where the intrinsic variance $V$ is diagonal.
 
 In terms of generating a scalar: One option is the \emph{value} of
-this log probability $\ln p(b\given y_1,y_2)$ evaluated at $b=0$. That
-has lots of good properties, including that of being probabilistically
-justified, and that of not depending incredibly strongly on the prior
-variance $\Lambda$ (especially when the data are high in
-signal-to-noise). Another good (and surprising) property is that it
-becomes exactly $\chi^2$ when the measurements are better than the
-prior variance along all directions, and the prior variance is
-full-rank.
+this log probability $\ln p(b\given y_1,y_2)$ evaluated at $b=0$, to
+wit the scalar $Q$:
+\begin{eqnarray}
+Q &\equiv&
+  -\frac{1}{2}\,\transpose{\beta}\cdot\inverse{W}\cdot\beta
+  -\frac{1}{2}\,\ln\det{2\pi\,W} \quad ,
+\end{eqnarray}
+with $\beta$ and $W$ defined above in terms of the data and variances.
+
+This scalar $Q$ has lots of good properties, including that of being
+probabilistically justified, and that of not depending incredibly
+strongly on the prior variance $\Lambda$ (especially when the data are
+high in signal-to-noise). Another good (and surprising) property is
+that it becomes exactly $-\chi^2/2$ (plus a constant) when the
+measurements are better than the prior variance along all directions,
+and the prior variance is full-rank.
 
 \end{document}
