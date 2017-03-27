@@ -165,6 +165,7 @@ where $\Delta$ is the difference that is interesting and important
 is the difference that is uninteresting but real, and $\epsilon$ is
 pure measurement noise.
 
+\paragraph{Inference:}
 From these, we can construct a marginalized posterior pdf
 $p(\Delta\given y_1,y_2)$ for the true, interesting difference
 $\Delta$, by multiplying together the pdfs and integrating out
@@ -226,116 +227,44 @@ perhaps the log of that:
 \end{eqnarray}
 where we have dropped some constants and used some more matrix foo.
 
-HOGG: DISCUSS SCALAR $Q$ PROPERTIES
+This scalar $Q$ has lots of good properties, and lots to be discussed.
+First, it is probabilistically justified, in the context of the explicit
+assumptions I listed in the Assumptions section, above. That beats most
+heuristics.
+Second, it reduces to exactly $\chi^2$ of \equationname~(\ref{eq:chisquared}) in
+precisely the limit where we would expect it. This limit is that in which the
+intrinsic variance $W$ vanishes (so the noise is just $C_1 + C_2$), and the prior
+variance is large in all directions (so $V$ dominates the other matrices in its
+sum). That is, this whole formalism strongly endorses my original advice to ``just''
+use $\chi^2$.
+Third, if $V$ is low-rank (so there is no prior variance along some directions),
+we only care about the data directions that have non-zero prior variance. The
+multiply by $V$ in the middle of \equationname~(\ref{eq:scalar}) projects the
+data difference down to the non-zero directions in data space, as we want.
+Fourth, while the scalar $Q$ reduces to $\chi^2$ in the trivial limit,
+it also obeys another intuitive limit, which is that if the prior
+variance tensor $V$ and the observational noise $C_1 + C_2$ are at
+odds, the projection onto one and then the other ought to appear. This
+is like looking at the noise in the space in which the prior variance
+is spherical, or looking at the prior information in the space in
+which the observational information is isotropic.\footnote{This aspect
+  might project onto things that Andy Gould (OSU) was saying at people
+  in Heidelberg.} Or whatevs.
 
-\end{document} % syntactical reference point
+So---in sum---we weren't so wrong to be using $\chi^2$ in the first
+place.
+The biggest issue with our scalar $Q$ is that---as with $\chi^2$---we have to choose a
+threshold. Choosing that threshold, if we want to (say) make a sample
+of twins, is necessary, and it is also necessarily heuristic.
 
-The first thing we are going to do is diagonalize the prior variance
-tensor $V$. We are going to do this so we develop an approach that is
-computationally feasible when $V$ is low-rank, and numerically stable
-when $V$ has a bad condition number. We will write
-\begin{eqnarray}
-V &\equiv& R\cdot\Lambda\cdot\tra{R} \quad ,
-\end{eqnarray}
-where $R$ is a $D\times K$ matrix of the $K$ ($K\leq D$) eigenvectors
-of $V$ that have positive eigenvalues, and $\Lambda$ is the diagonal
-$K\times K$ tensor that has the eigenvalues on its diagonal. By the
-assumption that the true vectors are drawn from the Gaussian with this
-variance and mean $\mu$, we can (without any loss of generality) write
-the \emph{true} vectors $x_1$ and $x_2$ as a sum and difference of
-coefficient vectors $a$ and $b$ in the $K$-dimensional space as
-follows:
-\begin{eqnarray}
-x_1 &=& R\cdot[a + b] + \mu \\
-x_2 &=& R\cdot[a - b] + \mu \quad ,
-\end{eqnarray}
-where the $D$-vector $R\cdot a + \mu$ is the mean of $x_1$ and $x_2$,
-and $R\cdot b$ is the half-difference between $x_1$ and $x_2$. This is
-a change of variables.  In this change of variables, the question of
-``are $y_1$ and $y_2$ identical?'' will convert to the question of
-``is the posterior pdf for $b$ consistent with $b=0$?''. We need a
-posterior pdf for $b$!
+\paragraph{Linear algebra:}
+The patient reader may complain that there has already been enough
+linear algebra.\footnote{Even though there hasn't been nearly as much
+  here as there has been in my notebooks getting to this point!}
+But there hasn't, because I have been talking about the point that
+$V$ might be low rank, and how this might help us, or how we might modify
+the way we compute things if it \emph{is} low-rank.
 
-\paragraph{Bayesian inference:}
-Under these assumptions (above), there is only one thing to do:
-Compute the posterior pdf for $b$, marginalizing out $a$, given the
-data $y_1$ and $y_2$, and our assumptions (which are detailed, and
-include the objects $C_1$, $C_2$, $\mu$, and $V$).
-\begin{eqnarray}
-p(b\given y_1,y_2) &=& \int p(a,b\given y_1,y_2)\,\dd a \\
-p(a,b\given y_1,y_2) &=& \frac{1}{Z}\,p(a,b)\,p(y_1\given a,b)\,p(y_2\given a,b) \\
-p(a,b) &=& \normal(a+b\given 0,\Lambda)\,\normal(a-b\given 0,\Lambda) \\
-p(y_1\given a,b) &=& \normal(y_1\given R\cdot[a+b]+\mu,C_1) \\
-p(y_2\given a,b) &=& \normal(y_2\given R\cdot[a-b]+\mu,C_2), \quad
-\end{eqnarray}
-where the integral is over all values of $a$, the normalization
-constant $Z$ can be ignored for now, and the function $\normal(x\given
-m,v)$ is the Gaussian pdf for $x$ given mean $m$ and variance
-$v$. Switching to the log (and making use of the magic of Gaussians),
-\begin{eqnarray}
-\ln p(a,b\given y_1,y_2) &=&
-  -\frac{1}{2}\,\tra{[a+b]}\cdot\inv{\Lambda}\cdot [a+b]
-  -\frac{1}{2}\,\tra{[a-b]}\cdot\inv{\Lambda}\cdot [a-b] \nonumber\\
-  &&
-  -\frac{1}{2}\,\tra{[y_1-R\cdot(a+b)-\mu]}\cdot\inv{C_1}\cdot [y_1-R\cdot(a+b)-\mu] \nonumber\\
-  &&
-  -\frac{1}{2}\,\tra{[y_2-R\cdot(a-b)-\mu]}\cdot\inv{C_2}\cdot [y_2-R\cdot(a-b)-\mu] \nonumber\\
-  &&
-  + Z \quad ,
-\end{eqnarray}
-where $Z$ is a constant that doesn't matter to our inference. All we
-have to do now is complete the square for $a$, exponentiate, do the
-$a$ integral, and look at the $b$-dependence of the result.
-This result is also quadratic in $b$, so really we complete the square
-in $a$ and then take the constant term, and complete the square for
-\emph{that} in $b$.
-
-When we do the double completion of squares, we get an absolute
-hellacious mess\footnote{Yes, I really do have this worked out in my
-  orange notebook, under the date 2017-03-13, with only a few
-  uncertain signs.}.
-One reaction to this mess is to consider the
-unrealistic but comforting case of $C_1=C_2\equiv C$; that is, the case in
-which both objects are observed with very similar measurement noise.
-In this case, the $a$-marginalized posterior becomes
-\begin{eqnarray}
-\ln p(b\given y_1,y_2) &=&
-  -\frac{1}{2}\,\tra{[b-\beta]}\cdot\inv{W}\cdot [b-\beta]
-  -\frac{1}{2}\,\ln\det{2\pi\,W} \\
-\inv{W} &\equiv&
-  2\,\inv{\Lambda} + 2\,\tra{R}\cdot\inv{C}\cdot R \\
-\beta &\equiv&
-  W\cdot\tra{R}\cdot\inv{C}\cdot [y_1 - y_2]
-\quad ,
-\end{eqnarray}
-where the log-det term is a normalization constant that ensures a unit
-integral in the $b$ space. Note that this solution has the very nice
-property that if $R$ is not square---that is, the prior variance is
-low rank---all computations are done in the lower-dimension basis,
-with the operator $W\cdot\tra{R}\cdot\inv{C}$ projecting the
-data difference $[y_1-y_2]$ to the (possibly) lower-dimension basis
-where the intrinsic variance $V$ is diagonal.
-
-In terms of generating a scalar: The option we opened with, above, is
-to evaluate this log probability $\ln p(b\given y_1,y_2)$ at zero
-separation $b=0$. That is, to use the scalar $Q$:
-\begin{eqnarray}
-Q &\equiv&
-  -\frac{1}{2}\,\tra{\beta}\cdot\inv{W}\cdot\beta
-  -\frac{1}{2}\,\ln\det{2\pi\,W} \quad ,
-\end{eqnarray}
-with $\beta$ and $W$ defined above in terms of the data and variances.
-
-This scalar $Q$ has lots of good properties, including that of being
-probabilistically justified, and that of not depending incredibly
-strongly on the prior variance $\Lambda$ (especially when the data are
-high in signal-to-noise). Another good (and surprising) property is
-that it becomes exactly $-\chi^2/2$ (plus a constant), where $\chi^2$
-is defined above in \equationname~(\ref{eq:chisquared}), precisely when the
-measurements are better than the prior variance along all directions,
-and the prior variance is full-rank (so $\tra{R}\cdot R\equiv R\cdot\tra{R}$ is the
-identity).
-
-So we weren't so wrong to be using $\chi^2$ in the first place.
+HOGG: STUFF ABOUT V GETTING LOW RANK.
 
 \end{document}
