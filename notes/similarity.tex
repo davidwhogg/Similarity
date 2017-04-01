@@ -233,8 +233,10 @@ Leistedt (NYU).} for Gaussian functions:
 
 There are many comments to be made here. One is that the matrix $V$
 (which appears in our fomula for $\Sigma$ and therefore also $\mu$)
-does not necessarily have an inverse! In which case, inverting it can
-be avoided by noting the following identity:
+does not necessarily have an inverse!\footnote{The matrix $V$ will not
+  have an inverse when it is low rank. For discussion of low rank, see
+  above in the vicinity of \equationname~(\ref{eq:lowrank}).} In which
+case, inverting it can be avoided by noting the following identity:
 \begin{eqnarray}
   \inv{[\inv{A} + \inv{B}]} &\equiv& A\cdot\inv{[A + B]}\cdot B
 \quad .
