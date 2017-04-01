@@ -3,6 +3,7 @@
 % typography
 \newcommand{\documentname}{\textsl{Note}}
 \newcommand{\equationname}{equation}
+\newcommand{\acronym}[1]{{\small{#1}}}
 
 % math
 \newcommand{\tra}[1]{{#1}^{\mathsf{T}}}
@@ -15,7 +16,11 @@
 \begin{document}\sloppy\sloppypar\raggedbottom\frenchspacing
 
 \section*{\raggedright Data Analysis Recipes:\\
-                       How similar are two noisily observed vectors?}
+                       How similar are two noisily observed vectors?%
+\footnote{This document is copyright 2017 the author. Feel free to copy and
+distribute it, provided that you make no changes to it whatsoever.
+For many of the ideas and some of the presentation in this document, I
+am indebted to Dan Foreman-Mackey (UW) and Hans-Walter Rix (MPIA).}}
 
 \noindent
 \textbf{David W. Hogg}\\
@@ -40,9 +45,10 @@ significant, either because of measurement noise, or because of
 intrinsic differences that somehow ``don't matter''. The approach
 makes heavy use of Gaussians for their mathematical simplicity. In a
 sensible limit, the answer reduces to pure chi-squared difference
-between the observations. I discuss the results in the context of
-stellar spectroscopy (stellar twins) and chemical-abundance-space
-measurements of stars (chemical tagging).
+between the observations. I discuss the results in the context of some
+astrophysics problems---stellar spectroscopy (stellar twins) and
+chemical-abundance-space measurements (chemical tagging)---but it
+should be accessible to any natural scientist.
 
 \paragraph{Introduction:}
 Imagine that $y_1$ and $y_2$ are two observed data points. Think of
@@ -147,6 +153,28 @@ computational tractability.
   then this variance $W$ can be set to precisely zero in what follows.
 \end{enumerate}
 
+In the above, I mentioned the word ``low rank''. The matrix $V$ is
+low-rank if it can be written as
+\begin{eqnarray}
+V &=& \tra{R}\cdot\Lambda\cdot R
+\label{eq:lowrank}\quad ,
+\end{eqnarray}
+where $R$ is rectangular, and $\Lambda$ is a diagonal matrix that is
+smaller in dimension than $V$. A place where typical physicists have
+encountered low-rank matrices is when they have performed principal
+components analysis (\acronym{PCA}) or singular value decomposition
+(\acronym{SVD}), taken only the top $K$ eigenvectors, and re-built an
+approximation to the variance tensor or matrix that they started with.
+When parts of this problem are low-rank, there will be small
+linear-algebra tricks that will become available to speed up our
+analyses.  The \emph{reason} that these low-rank comments are relevant
+here is that the true or prior variance $V$ is almost always low-rank
+when the dimension of the problem gets large: For one relevant
+example, a stellar spectrum has thousands of pixels, but it's shape is
+actually controlled by only a few underlying parameters.  That says
+that we ought to keep the concept of low-rank $V$ in mind as we
+proceed.
+
 Our model is going to be that the difference between the observed
 spectra is composed of a true, interesting component, a true,
 uninteresting component, and some measurement noise. We are going to
@@ -186,11 +214,11 @@ These results were found by making heavy use of the following
 exact identity\footnote{For which I owe great thank to Boris
 Leistedt (NYU).} for Gaussian functions:
 \begin{eqnarray}
-  \normal(x\given a,A)\,\normal(x\given b,B) &\equiv& \normal(a\given b,A+B)\,\normal(x\given c,C)
+  \normal(x\given a,A)\,\normal(x\given b,B) &\equiv& \normal(a\given b,A+B)\,\normal(x\given d,D)
 \\
-  C &\equiv& \inv{[\inv{A} + \inv{B}]}
+  D &\equiv& \inv{[\inv{A} + \inv{B}]}
 \\
-  c &\equiv& C\cdot [\inv{A}\cdot a + \inv{B}\cdot b]
+  d &\equiv& D\cdot [\inv{A}\cdot a + \inv{B}\cdot b]
 \quad .
 \end{eqnarray}
 
@@ -225,10 +253,21 @@ perhaps the log of that:
 \\
     &=& \tra{\mu}\cdot\inv{\Sigma}\cdot\mu
 \\
-    &=& \tra{[y_1-y_2]}\cdot\inv{[V + C_1 + C_2 + W]}\cdot V\cdot\inv{[C_1 + C_2 + W]}\cdot[y_1-y_2]
-\label{eq:scalar}\quad ,
+    &=& \tra{[y_1-y_2]}\cdot\inv{[V + C]}\cdot V\cdot\inv{C}\cdot[y_1-y_2]
+\label{eq:scalar} \\
+  C &\equiv& C_1 + C_2 + W
+\quad ,
 \end{eqnarray}
-where we have dropped some constants and used some more matrix foo.
+where we defined $C$ to be the sum of the noise variances to simplify
+our expression, and we have dropped some constants\footnote{The
+  constants we have dropped are terms involving log determinants of
+  various matrices. We can drop them in this context, because we are
+  assuming (see Assumptions above) that we know all four tensors $C_1$,
+  $C_2$, $V$, and $W$. If that \emph{isn't} true, and this analysis
+  were to be expanded to one in which any or all of those variance
+  tensors was to be learned or inferred or marginalized out, these
+  log-determinant terms could not be ignored. Just a word to the
+  wise.} and used some more matrix-algebra foo.
 
 This scalar $Q$ has lots of good properties, and lots to be discussed.
 First, it is probabilistically justified, in the context of the explicit
@@ -236,7 +275,7 @@ assumptions I listed in the Assumptions section, above. That beats most
 heuristics.
 Second, it reduces to exactly $\chi^2$ of \equationname~(\ref{eq:chisquared}) in
 precisely the limit where we would expect it. This limit is that in which the
-intrinsic variance $W$ vanishes (so the noise is just $C_1 + C_2$), and the prior
+intrinsic variance $W$ vanishes (so the noise variance is just $C = C_1 + C_2$), and the prior
 variance is large in all directions (so $V$ dominates the other matrices in its
 sum). That is, this whole formalism strongly endorses my original advice to ``just''
 use $\chi^2$.
@@ -244,21 +283,35 @@ Third, if $V$ is low-rank (so there is no prior variance along some directions),
 we only care about the data directions that have non-zero prior variance. The
 multiply by $V$ in the middle of \equationname~(\ref{eq:scalar}) projects the
 data difference down to the non-zero directions in data space, as we want.
-Fourth, (HOGG FIX THIS POINT) while the scalar $Q$ reduces to $\chi^2$ in the trivial limit,
-it also obeys another intuitive limit, which is that if the prior
-variance tensor $V$ and the observational noise $C_1 + C_2$ are at
-odds, the projection onto one and then the other ought to appear. This
-is like looking at the noise in the space in which the prior variance
-is spherical, or looking at the prior information in the space in
-which the observational information is isotropic.\footnote{This aspect
-  might project onto things that Andy Gould (OSU) was saying at people
-  in Heidelberg.} Or whatevs.
+Forth, the operation $V\cdot\inv{C}$ is effectively taking the ratio
+of the prior variance to the noise variance. This operation up-weights
+directions in data space where the measurements are very good (very
+precise) relative to the prior, and down-weights directions where the
+noise variance is larger than the prior. After all, these directions
+(where the noise is worse than the prior) are directions where the
+data we have are not valuable in assessing similarity.\footnote{This
+  aspect might project onto things that Andy Gould (OSU) was saying at
+  people in Heidelberg.}
 
 So---in sum---we weren't so wrong to be using $\chi^2$ in the first
-place.
-The biggest issue with our scalar $Q$ is that---as with $\chi^2$---we have to choose a
-threshold. Choosing that threshold, if we want to (say) make a sample
-of twins, is necessary, and it is also necessarily heuristic.
+place, but we \emph{were} able to address the point that some directions
+in the data space are far more valuable than others, in general.
+
+The biggest issue with our scalar $Q$ is that---as with $\chi^2$---we
+can compute it, but we don't know what to \emph{do} with it. If, for
+example, we want to make a list of identical pairs, we have to choose
+a threshold, below which we call the pair identical, and above which
+we don't. Choosing that threshold, if we want to (say) make a sample
+of twins, is necessary, and it is also necessarily heuristic. I have
+an infinite number of thoughts about this, way more than I can write
+in this document, and also retain my day job. Some people think about
+this in terms of false-positive and false-negative rate, which maps
+onto the receiver-operator characteristic (\acronym{ROC}) Others think
+about this in terms of utility; I fall into this latter
+category\footnote{Dustin Lang and I have done so explicitly in the
+  astrophysics literature (CITE ASTROMETRY.NET).},
+but suffice it to say that any threshold-setting necessarily happens
+outside the context of probabilistic inference.
 
 \paragraph{Linear algebra:}
 The patient reader may complain that there has already been enough
