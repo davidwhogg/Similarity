@@ -13,6 +13,7 @@
 \newcommand{\documentname}{\textsl{Note}}
 \newcommand{\equationname}{equation}
 \newcommand{\acronym}[1]{{\small{#1}}}
+\newcommand{\code}[1]{{\texttt{#1}}}
 
 % math
 \newcommand{\tra}[1]{{#1}^{\mathsf{T}}}
@@ -172,7 +173,9 @@ where $R$ is rectangular, and $\Lambda$ is a diagonal matrix that is
 smaller in dimension than $V$. A place where typical physicists have
 encountered low-rank matrices is when they have performed principal
 components analysis (\acronym{PCA}) or singular value decomposition
-(\acronym{SVD}), taken only the top $K$ eigenvectors, and re-built an
+(\acronym{SVD})\footnote{The Wikipedia pages on PCA, SVD, and other
+  linear algebra operations mentioned in this note are all
+  excellent.}, taken only the top $K$ eigenvectors, and re-built an
 approximation to the variance tensor or matrix that they started with.
 When parts of this problem are low-rank, there will be small
 linear-algebra tricks that will become available to speed up our
@@ -290,10 +293,12 @@ intrinsic variance $W$ vanishes (so the noise variance is just $C = C_1 + C_2$),
 variance is large in all directions (so $V$ dominates the other matrices in its
 sum). That is, this whole formalism strongly endorses my original advice to ``just''
 use $\chi^2$.
-Third, if $V$ is low-rank (so there is no prior variance along some directions),
-we only care about the data directions that have non-zero prior variance. The
-multiply by $V$ in the middle of \equationname~(\ref{eq:scalar}) projects the
-data difference down to the non-zero directions in data space, as we want.
+Third, if $V$ is low-rank (as described in and around
+\equationname~(\ref{eq:lowrank}); that is, so there is no prior
+variance along some directions), we only care about the data
+directions that have non-zero prior variance. The multiply by $V$ in
+the middle of \equationname~(\ref{eq:scalar}) projects the data
+difference down to the non-zero directions in data space, as we want.
 Forth, the operation $V\cdot\inv{C}$ is effectively taking the ratio
 of the prior variance to the noise variance. This operation up-weights
 directions in data space where the measurements are very good (very
@@ -327,12 +332,48 @@ outside the context of probabilistic inference.
 \paragraph{Linear algebra:}
 The patient reader may complain that there has already been enough
 linear algebra.\footnote{Even though there hasn't been nearly as much
-  here as there has been in my notebooks getting to this point!}
-But there hasn't, because I have been talking about the point that
-$V$ might be low rank, and how this might help us, or how we might modify
-the way we compute things if it \emph{is} low-rank.
+  mathematical mess written in this document as there has been written
+  in my notebooks getting to this point!}  But there hasn't, because I
+have been talking about the point that $V$ might be low rank in the
+sense of \equationname~(\ref{eq:lowrank}), and how this lower rank
+might help us, or how we might modify the way we compute things if it
+\emph{is} low-rank.
 
-HOGG: TBD: STUFF ABOUT V GETTING LOW RANK.
+The principal and most valuable fact to know about low-rank matrices
+is that when something is low-rank, you can make use of the matrix
+inversion lemma\footnote{Also called the ``Woodbury Matrix Identity''
+  and described usefully here:
+  \url{https://en.wikipedia.org/wiki/Woodbury_matrix_identity}. I
+  don't use the ``Woodbury'' name for this because I don't like
+  calling things after people's names when I don't have to.}
+\begin{eqnarray}
+\inv{[V + C]} &=& \inv{[\tra{R}\cdot\Lambda\cdot R + C]}
+\\
+ &\equiv& \inv{C} - \inv{C}\cdot\tra{R}\cdot \inv{[\inv{\Lambda} + R\cdot \inv{C}\cdot\tra{R}]}\cdot R\cdot\inv{C}
+\quad ,
+\end{eqnarray}
+where we have used the low-rank description of \equationname~(\ref{eq:lowrank}).
+This might not look like a simplification, but it usually is, speed-wise, and
+also often for numerical stability.
+For example, in the extremely common case that $C$ is diagonal (all
+noise is axis-aligned, or independent from data dimension to data
+dimension), and $V$ is very low-rank, this is all very fast to
+compute.
+
+Another piece of unsolicited advice: When any matrix $C$ or $\Lambda$
+is diagonal, don't instantiate it as a full matrix with almost every
+element zero, and don't invert it using the inversion code in your
+linear algebra library: Invert the diagonal and keep it just as a list
+of diagonal elements! That's just good code practice.
+
+Yet another piece of unsolicited advice: It is often and usually
+better to compute \code{solve(A, y)} than \code{dot(inv(A), y)}. That
+is, the \code{solve()} operation is usually more stable than the
+matrix inverter.  Also, if you are doing the same solve or inversion
+over and over again, you can usually get your matrix library to carry
+forward or save a factorization.\footnote{Another piece of advice, but
+  much less relevant to the present document, is to use \code{logdet}
+  or \code{slogdet} not \code{det} when you need determinants.}
 
 \paragraph{Stellar spectra and abundances:}
 HOGG: TBD: SAY THINGS ABOUT THE SPECIFIC CASES OF Ness AND Hawkins.
