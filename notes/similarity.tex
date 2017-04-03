@@ -2,9 +2,10 @@
 % Copyright 2017 the author.
 
 % # To-Do:
-% - see orange book.
 % - put in proper bibliography and citations.
-% - link to relevant Wikipedia pages.
+% - make more discursive introduction
+% - re-check that abstract tells the whole story
+% - need to cite out to or refer to Sam's linear algebra and Gaussian notes
 
 \documentclass[12pt,letterpaper]{article}
 \usepackage[hidelinks]{hyperref}
@@ -266,7 +267,7 @@ perhaps the log of that:
   Q &\equiv& -2\,\log p(\Delta=0\given y_1,y_2)
 \\
     &=& \tra{\mu}\cdot\inv{\Sigma}\cdot\mu
-\\
+\label{eq:1}\\
     &=& \tra{[y_1-y_2]}\cdot\inv{[V + C]}\cdot V\cdot\inv{C}\cdot[y_1-y_2]
 \label{eq:scalar} \\
   C &\equiv& C_1 + C_2 + W
@@ -276,22 +277,24 @@ where we defined $C$ to be the sum of the noise variances to simplify
 our expression, and we have dropped some constants\footnote{The
   constants we have dropped are terms involving log determinants of
   various matrices. We can drop them in this context, because we are
-  assuming (see Assumptions above) that we know all four tensors $C_1$,
-  $C_2$, $V$, and $W$. If that \emph{isn't} true, and this analysis
-  were to be expanded to one in which any or all of those variance
-  tensors was to be learned or inferred or marginalized out, these
-  log-determinant terms could not be ignored. Just a word to the
-  wise.} and used some more matrix-algebra foo.
+  assuming (see Assumptions above) that we know all four tensors
+  $C_1$, $C_2$, $V$, and $W$. If that \emph{isn't} true, and this
+  analysis were to be expanded to one in which any or all of those
+  variance tensors was to be learned or inferred or marginalized out,
+  these log-determinant terms could not be ignored. Just a word to the
+  wise.} and used some more matrix-algebra foo to get from
+  \equationname~(\ref{eq:1}) to (\ref{eq:scalar}).
 
-This scalar $Q$ has lots of good properties, and lots to be discussed.
+This scalar $Q$ of \equationname~(\ref{eq:scalar}) has lots of good properties,
+and begs various points of discussion:
 First, it is probabilistically justified, in the context of the explicit
 assumptions I listed in the Assumptions section, above. That beats most
 heuristics.
 Second, it reduces to exactly $\chi^2$ of \equationname~(\ref{eq:chisquared}) in
 precisely the limit where we would expect it. This limit is that in which the
 intrinsic variance $W$ vanishes (so the noise variance is just $C = C_1 + C_2$), and the prior
-variance is large in all directions (so $V$ dominates the other matrices in its
-sum). That is, this whole formalism strongly endorses my original advice to ``just''
+variance is large in all directions (so $V + C$ approaches $V$).
+That is, this whole formalism strongly endorses my original advice to ``just''
 use $\chi^2$.
 Third, if $V$ is low-rank (as described in and around
 \equationname~(\ref{eq:lowrank}); that is, so there is no prior
@@ -299,7 +302,7 @@ variance along some directions), we only care about the data
 directions that have non-zero prior variance. The multiply by $V$ in
 the middle of \equationname~(\ref{eq:scalar}) projects the data
 difference down to the non-zero directions in data space, as we want.
-Forth, the operation $V\cdot\inv{C}$ is effectively taking the ratio
+Fourth, the operation $V\cdot\inv{C}$ is effectively taking the ratio
 of the prior variance to the noise variance. This operation up-weights
 directions in data space where the measurements are very good (very
 precise) relative to the prior, and down-weights directions where the
