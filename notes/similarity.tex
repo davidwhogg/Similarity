@@ -2,7 +2,8 @@
 % Copyright 2017 the author.
 
 % # To-Do:
-% - put in proper bibliography and citations.
+% - put in proper citations
+% - fix typesetting and content of bibliography
 % - make more discursive introduction
 % - re-check that abstract tells the whole story
 % - need to cite out to or refer to Sam's linear algebra and Gaussian notes
@@ -11,10 +12,12 @@
 \usepackage[hidelinks]{hyperref}
 
 % typography
-\newcommand{\documentname}{\textsl{Note}}
-\newcommand{\equationname}{equation}
+\newcommand{\foreign}[1]{\textsl{#1}}
 \newcommand{\acronym}[1]{{\small{#1}}}
 \newcommand{\code}[1]{{\texttt{#1}}}
+\newcommand{\documentname}{\textsl{Note}}
+\newcommand{\equationname}{equation}
+\newcommand{\etal}{\foreign{et al.}}
 
 % math
 \newcommand{\tra}[1]{{#1}^{\mathsf{T}}}
@@ -29,12 +32,12 @@
 \section*{\raggedright Data Analysis Recipes:
   How similar are two noisily observed vectors?%
 \footnote{This document is copyright 2017 the author. Feel free to copy and
-distribute it, provided that you make no changes to it whatsoever.
-For many of the ideas and some of the presentation in this document, I
-am indebted to Dan Foreman-Mackey (UW) and Hans-Walter Rix (MPIA).}}
+distribute it, provided that you make no changes to it whatsoever.}}
 
 \noindent
-\textbf{David W. Hogg}\\
+\textbf{David W. Hogg%
+\footnote{For many of the ideas and some of the presentation in this document, I
+am indebted to Dan Foreman-Mackey (UW) and Hans-Walter Rix (MPIA).}}\\
 \textsl{\footnotesize
   Center for Cosmology and Particle Physics, Department of Physics, New York University \\
   Center for Data Science, New York University \\
@@ -73,8 +76,7 @@ One option would be to think of making two hypotheses, to wit, ``H1:
 The two objects are identical'', and ``H2: The two objects are
 different''. Then we could compute the marginalized likelihoods of
 these two hypotheses under some priors over the nuisance parameters of
-relevance. That's sensible (and more-or-less what we did in S. M. Oh's
-paper).
+relevance. That's sensible (and more-or-less what we did in Oh \etal, 2017).
 
 Another option would be to convert this problem into one of parameter
 estimation: That is, compute a marginalized likelihood or marginalized
@@ -174,7 +176,7 @@ where $R$ is rectangular, and $\Lambda$ is a diagonal matrix that is
 smaller in dimension than $V$. A place where typical physicists have
 encountered low-rank matrices is when they have performed principal
 components analysis (\acronym{PCA}) or singular value decomposition
-(\acronym{SVD})\footnote{The Wikipedia pages on PCA, SVD, and other
+(\acronym{SVD})\footnote{The Wikipedia pages on \acronym{PCA}, \acronym{SVD}, and other
   linear algebra operations mentioned in this note are all
   excellent.}, taken only the top $K$ eigenvectors, and re-built an
 approximation to the variance tensor or matrix that they started with.
@@ -223,9 +225,13 @@ $\epsilon$ and $\delta$. This marginalization produces
 \quad ,
 \end{eqnarray}
 where $C$ is a variance matrix, and $\mu$ is an expectation value.
-These results were found by making heavy use of the following
-exact identity\footnote{For which I owe great thank to Boris
-Leistedt (NYU).} for Gaussian functions:
+These results were found by making heavy use of the following exact
+identity\footnote{For which I owe great thanks to Boris Leistedt
+  (NYU), and also my old friend Sam Roweis (deceased), whose notes on
+  Gaussian identities and matrix identities I carry with me always. At
+  time of writing these notes can be reached at \url{foo} and
+  \url{bar}.}
+for Gaussian functions:
 \begin{eqnarray}
   \normal(x\given a,A)\,\normal(x\given b,B) &\equiv& \normal(a\given b,A+B)\,\normal(x\given d,D)
 \\
@@ -380,5 +386,11 @@ forward or save a factorization.\footnote{Another piece of advice, but
 
 \paragraph{Stellar spectra and abundances:}
 HOGG: TBD: SAY THINGS ABOUT THE SPECIFIC CASES OF Ness AND Hawkins.
+
+\paragraph{Bibliography}
+\begin{trivlist}\itemsep=0ex
+\item Ness \etal, 2017, whatevs
+\item Oh \etal, 2017, whatevs
+\end{trivlist}
 
 \end{document}
