@@ -85,7 +85,26 @@ the two objects, and see if that likelihood or posterior pdf puts
 significant density on zero---on a null or vanishing difference
 vector.
 
-For various reasons that are (perhaps) badly justified, we are going
+For various reasons that are (perhaps) badly justified\footnote{%
+  It is my experience that hypothesis testing, or model comparison, is
+  much harder than parameter estimation. This is not always true, but
+  often, since model comparison involves performing full integrals of
+  a type that cannot be performed with Markov Chain Monte Carlo (not that
+  this consideration is directly relevant here),
+  while parameter estimation can proceed with smaller integrals, and of
+  the type that \emph{can} be performed with \acronym{MCMC}. Now a model
+  comparison can only be converted into a parameter estimation when the
+  models are somehow related or nested, as they are in this case. That is,
+  the case of two vectors being identical is the vanishing-separation limit
+  of the case of two vectors being different. I also have various bits of
+  philosophy about prior-dependence that are more or less relevant, depending
+  on context. And don't get me started on long-term future-discounted free
+  cash flow (which is relevant, believe it or not). I have removed all of this
+  from the main text because I don't want the reader to
+  get bogged down with philosophy. I left it in this footnote, however, to
+  suggest to the reader that there is \emph{some} thinking behind the opaque
+  choices made here and in what follows.}
+we are going
 to take the second approach in this \documentname. That is, we are
 going to estimate the difference between the objects given their
 (presumed noisy) measurements, and find out if that difference is
@@ -125,8 +144,24 @@ are better than others for determining identicality, $\chi^2$ is blind
 to that. That is a significant objection, and the one I
 address---below!---in this \documentname.
 
+One final note before we start: This \documentname\ does not contain,
+in any sense or by any implication, any original idea or method in the
+domain of statistics, applied mathematics, or astrophysics. It is
+merely a pedagogical document, designed to clarify and to entertain.
+Please approach it with that expectation.
+
 \paragraph{Assumptions:}
-I am going to make the following assumptions, each one of which is
+I am going to make the following assumptions%
+\footnote{It is my view that the only sense in which a data analysis
+  can be said to be \emph{correct} or (heaven forbid)
+  ``\emph{optimal}'' (yes, I am using \emph{scare quotes}) is if there
+  is a sufficiently clear set of explicitly stated assumptions such
+  that the method can be shown to be correct or optimal \emph{under
+  those explicit assumptions}. That is, we can't talk about doing
+  something correctly if we can't set out clearly the rules are under which
+  correctness can be defined. Therefore the assumptions laid out here
+  represent \emph{the main point} of this \documentname.},
+each one of which is
 questionable and unpleasant, but each one of which improves our
 computational tractability.
 \begin{enumerate}\itemsep0ex
