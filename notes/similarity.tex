@@ -482,24 +482,103 @@ determine\footnote{Recall that we must determine these in order to use
   of the assumptions that we have acceptable estimates of $V$ and
   $W$.} these tensors?
 
-I hereby define the scope of this \documentname\ such that these
-questions are out of scope!
+A full treatment of how you might obtain and assess prior variance $V$
+and nuisance variance $W$ are firmly outside the scope of this
+\documentname. However, here are some comments of possible relevance:
+First, if your observations are precise, and the population is
+broad in most or all dimensions, then just take the limit of large $V$
+and $\chi^2$ (though with variance $C\equiv C_1 + C_2 + W$). This is
+very often the case when the data are low-dimensional ($D$ is a few).
 
-Okay, that's not fair. While leaving a full treatment outside the
-scope, here are some comments of possible relevance: FIRST: USE V=INFINITY IF RELEVANT.
+Second, if your observations are precise, but you think that the prior
+variance $V$ is low-rank, use \acronym{PCA} on a representative data
+sample---that is, a representative set of observations. Inspect the
+eigenvalues out of \acronym{PCA}, decide where to cut $K$, and build
+$V$ out of those top $K$ eigenvalues $\lambda_k$ and eigenvectors $e_k$ by
+\begin{eqnarray}
+  V &=& \sum_{k=1}^K \lambda_k\,e_k\cdot\tra{e_k}
+\quad .
+\end{eqnarray}
+This has the disadvantage that it gives an approximation to the
+empirical variance, which has both true-scatter and
+observational-scatter contributions. But this approach is often
+appropriate. In the case of finding stellar stunt doubles (identical
+spectra) in the \acronym{APOGEE} Survey, this is a possibly acceptable
+method, simply because the spectra are very high in
+signal-to-noise. It is less true in the case of finding chemical
+twins, because there the individual-element abundance measurements are
+noisy.
 
-SECOND: USE PCA OR EQUIVALENT IF $V\gg C$
+Third, if this latter issue---that the observational scatter is
+biasing your $V$ estimate high---is a problem, you might want to do
+some kind of real inference to get $V$. That is, if components of $C$
+are as large as or larger than relevant components of $V$, you might
+want to build a model to infer $V$. We have written up examples of
+this (HOGG CITE XD, HMF); one of these examples could be applied to the
+chemical-twin case.
 
-THIRD: FIND $W$ BY REGRESSION OR SVM OR SOMETHING LIKE THAT IF DATA ARE GOOD.
-
-FOURTH: BUILD A REAL MODEL IF NONE OF THE ABOVE. SEE HMF AND XD PAPERS.
+Fourth, I should comment that estimation of $W$ is more
+problematic. Generally you won't have a sensitive scalar $Q$ if $W$ is
+large in bad ways. That is, if $W$ has large eigenvalues associated
+with eigenvectors that projects strongly onto the eigenbasis of $V$,
+there won't be much discriminative power (the product $V\cdot\inv{C}$
+will become small). So ideally $W$ is low in rank. There is no magic
+method for finding the low-rank sub-space; it is problem-dependent. In
+the case of finding chemical twins, we know that stars born in the
+same star cluster have extremely similar chemical abundances, but in
+detail there are tiny differences along certain directions in
+chemical-abundance space. In this case, empirical differences among
+stars that are known to have common origin can be inspected or
+\acronym{PCA}-ed or modeled statistically to develop an estimate for
+$W$.
 
 \paragraph{Relaxing the assumptions:}
-HOGG: LET'S GO. TRACTABILITY. APPROACHES.
+We began the description of the methods presented in this
+\documentname\ with a list of assumptions. Why do we make these
+assumptions, and can we relax them?
 
-MIXTURES OF GAUSSIANS.
+The principal, over-riding assumption is that everything is Gaussian:
+Both observational uncertainties, the prior, and the nuisance
+(intrinsic scatter). This assumption is required for any fast
+method. There are other options that might be convex, and there are
+definitely other choices that are more accurate in many situations,
+but most deviations from Gaussianity lead to either mathematical
+intractability, or bad slowness. That said, if the data contain
+substantial outliers (large skew or kurtosis), it might be necessary
+to take into account, depending on your goals. It is usually worth
+trying the Gaussian case first at least, and then inspecting the
+output and issues.
 
-OTHER PARAMETERS (like true distance, as in Oh \etal, 2017).
+If you must depart from Gaussianity, I would recommend starting with
+mixtures of Gaussians. These retain many of the valuable properties of
+Gaussians and just elevate some of our linear algebra-expressions up
+to large sums of linear-algebra expressions. I used the word ``just''
+there, but the derivations might be challenging combinatorically, if
+all four variances (two observational, one prior, and one nuisance)
+all elevate to Gaussian mixtures.
+
+In many cases (like for instance in Oh \etal, 2017), there are
+additional non-linear parameters that affect either the data, or the
+implied difference, or the variance tensors. That is, there are some
+additional search parameters that have to be either optimized or
+marginalized out or grid-searched. This brings in a substantial change
+if there is any sense in which there are parameters that affect the
+tensors $C_1$, $C_2$, $V$, and $W$: If we vary these tensors, we must
+also vary some log-determinant terms that I have deliberately
+dropped. If you go there, you will have to re-derive all expressions,
+maintaining those terms.
+
+In some sense the worst assumption in this document is that the four
+tensors $C_1$, $C_2$, $V$, and $W$ are all presumed to be known well.
+That is almost never true in any investigation I have been involved
+in.  If you want to infer these or marginalize them out, however, you
+need to build a hierarchical noise and population model on top of
+everything I have written here. You will need your log-determinant
+terms, and also priors over new parameters. This gets into the full
+space of hierarchical graphical models, which is way beyond the
+current scope. That said, there are lots of great packages and growing
+community knowledge about such approaches. For problems like these,
+hierarchical models are the long-term solution.
 
 \paragraph{Bibliography}
 \begin{trivlist}\itemsep=0ex
