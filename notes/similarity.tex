@@ -13,6 +13,7 @@
 
 % typography
 \newcommand{\foreign}[1]{\textsl{#1}}
+\newcommand{\project}[1]{\textsl{#1}}
 \newcommand{\acronym}[1]{{\small{#1}}}
 \newcommand{\code}[1]{{\texttt{#1}}}
 \newcommand{\documentname}{\textsl{Note}}
@@ -31,12 +32,12 @@
 
 \section*{\raggedright Data Analysis Recipes:
   How similar are two noisily observed vectors?%
-\footnote{This document is copyright 2017 the author. Feel free to copy and
+\footnote{This \documentname\ is Copyright 2017 the author. Feel free to copy and
 distribute it, provided that you make no changes to it whatsoever.}}
 
 \noindent
 \textbf{David W. Hogg%
-\footnote{For many of the ideas and some of the presentation in this document, I
+\footnote{For many of the ideas and some of the presentation in this \documentname, I
 am indebted to Dan Foreman-Mackey (UW) and Hans-Walter Rix (MPIA).}}\\
 \textsl{\footnotesize
   Center for Cosmology and Particle Physics, Department of Physics, New York University \\
@@ -65,12 +66,47 @@ chemical-abundance-space measurements (chemical tagging)---but it
 should be accessible to any natural scientist.
 
 \paragraph{Introduction:}
+The subjective motivation for writing this \documentname\ is the odd coincidence
+that during this academic year\footnote{2016--2017}, three different collaborators
+have brought to me questions about \emph{identicality}: How do you
+determine that two objects, both of which have been noisily observed,
+are in fact identical, in respects that we care about. One collaboration
+(Oh \etal, 2017)
+wanted to find pairs of stars, noisily observed by
+the \project{Gaia} Mission (HOGG CITE), that have identical spatial
+velocities.
+Another collaboration (Ness \etal, 2017) wanted to find pairs
+of stars, noisily observed by the \project{\acronym{APOGEE}}
+spectrograph (HOGG CITE), that have identical chemical abundances, despite the fact
+that (as a result of their different surface temperatures and surface
+gravities) they don't in fact look similar.
+Yet another (Hawkins \etal, in progress) has wanted to find stars that
+look identical in every way, spectrally---stars that are perfect stunt
+doubles---using the spectrographic data (the spectrograms, as it were)
+directly. In all three of these cases, I gave advice, but in all three
+cases, I became slightly unhappy both with the advice I was giving, and
+also with the availability of extremely clear expositions on this subject
+in the libraries of astrophysicists.\footnote{But I must admit that I didn't
+  look very hard. If I had looked harder, I would have found material under
+  the subject heading of HOGG FILL THIS IN.}
+It is my hope that this \documentname\ will be useful to researchers working
+outside---even far outside---the domain of astrophysics. These ideas and methods 
+are completely general.
+
 Imagine that $y_1$ and $y_2$ are two observed data points. Think of
-them as $D$-dimensional vectors in a vector space. They could be two
-spectra of two stars (Hawkins's problem), or they could be the
-detailed element abundances for two stars (Ness's problem). How can we
-tell if the two objects observed are intrinsically identical? Would
-they appear identical if we had better data?
+them as $D$-dimensional vectors in a vector space. They could be the
+pixel values in the observed spectra of two stars (in which case $D$
+is the number of pixels in the observed spectrum) or they could be
+the detailed element abundances measured for two stars (in which case
+$D$ is the number of measured elements). How can we tell if the two
+objects observed are intrinsically identical? Would they appear
+identical if we had better data?\footnote{I found myself saying,
+  recently, that in an observational science (like astronomy), you
+  have to define the words ``true'' and ``truly'' so that they can be
+  operationally satisfied. Are two stars \emph{truly} identical?  I
+  find that I want always to convert such questions to
+  counter-factuals about far better data: Will the two stars' data
+  become more and more similar as we take better and better data?}
 
 One option would be to think of making two hypotheses, to wit, ``H1:
 The two objects are identical'', and ``H2: The two objects are
@@ -144,7 +180,7 @@ are better than others for determining identicality, $\chi^2$ is blind
 to that. That is a significant objection, and the one I
 address---below!---in this \documentname.
 
-One final note before we start: This \documentname\ does not contain,
+One final comment: This \documentname\ does not contain,
 in any sense or by any implication, any original idea or method in the
 domain of statistics, applied mathematics, or astrophysics. It is
 merely a pedagogical document, designed to clarify and to entertain.
@@ -179,12 +215,15 @@ computational tractability.
   but they probably shouldn't contain zero eigenvalues (that is,
   directions about which there is perfect knowledge).
 \item \emph{Prior:} The true vectors are drawn independently from a
-  Gaussian distribution of mean $\mu$ and variance tensor $\frac{1}{2}\,V$. This
-  variance tensor might have have some zero eigenvalues (that is, it
-  might be low-rank), or it might have some infinite eigenvalues; we
-  will write down equations that are safe to these possibilities. By
-  some magic or algorithm or intuition, the mean vector $\mu$ and
-  variance tensor $\frac{1}{2}\,V$ are known in advance.
+  Gaussian distribution of mean $\mu$ and variance tensor
+  $\frac{1}{2}\,V$. This variance tensor might have have some zero
+  eigenvalues (that is, it might be low-rank), or it might have some
+  infinite eigenvalues; we will write down equations that are safe to
+  these possibilities. By some magic or algorithm\footnote{I have
+    developed two relevant algorithms here. One is called Extreme
+    Deconvolution (HOGG CITE), and one is called Heteroskedastic
+    Matrix Factorization (HOGG CITE).} or intuition, the mean vector
+  $\mu$ and variance tensor $\frac{1}{2}\,V$ are known in advance.
 \item \emph{Intrinsic scatter:} There are certain kinds of differences
   between vectors that are unimportant to us. That is, if they are
   different in these uninteresting ways, we don't consider them to be
@@ -355,7 +394,8 @@ noise variance is larger than the prior. After all, these directions
 (where the noise is worse than the prior) are directions where the
 data we have are not valuable in assessing similarity.\footnote{This
   aspect might project onto things that Andy Gould (OSU) was saying at
-  people in Heidelberg.}
+  people in Heidelberg. It also answers one of the raw objections to
+  plain-old $\chi^2$ that I raised near the beginning.}
 
 So---in sum---we weren't so wrong to be using $\chi^2$ in the first
 place, but we \emph{were} able to address the point that some directions
@@ -368,7 +408,7 @@ a threshold, below which we call the pair identical, and above which
 we don't. Choosing that threshold, if we want to (say) make a sample
 of twins, is necessary, and it is also necessarily heuristic. I have
 an infinite number of thoughts about this, way more than I can write
-in this document, and also retain my day job. Some people think about
+in this \documentname, and also retain my day job. Some people think about
 this in terms of false-positive and false-negative rate, which maps
 onto the receiver-operator characteristic (\acronym{ROC}) Others think
 about this in terms of utility; I fall into this latter
@@ -380,7 +420,7 @@ outside the context of probabilistic inference.
 \paragraph{Linear algebra:}
 The patient reader may complain that there has already been enough
 linear algebra.\footnote{Even though there hasn't been nearly as much
-  mathematical mess written in this document as there has been written
+  mathematical mess written in this \documentname\ as there has been written
   in my notebooks getting to this point!}  But there hasn't, because I
 have been talking about the point that $V$ might be low rank in the
 sense of \equationname~(\ref{eq:lowrank}), and how this lower rank
@@ -420,14 +460,18 @@ is, the \code{solve()} operation is usually more stable than the
 matrix inverter.  Also, if you are doing the same solve or inversion
 over and over again, you can usually get your matrix library to carry
 forward or save a factorization.\footnote{Another piece of advice, but
-  much less relevant to the present document, is to use \code{logdet}
-  or \code{slogdet} not \code{det} when you need determinants.}
+  much less relevant to the present \documentname, is to use
+  \code{logdet()} or \code{slogdet()} but not \code{det()} when you
+  need determinants.  Indeed, the \code{det()} operation is probably
+  an exponentiation of the \code{slogdet()} operation anyway, and
+  subject to unpleasant underflows or overflows.}
 
 \paragraph{Stellar spectra and abundances:}
 HOGG: TBD: SAY THINGS ABOUT THE SPECIFIC CASES OF Ness AND Hawkins.
 
 \paragraph{Bibliography}
 \begin{trivlist}\itemsep=0ex
+\item Lang \etal, 2010?, \url{Astrometry.net}
 \item Ness \etal, 2017, whatevs
 \item Oh \etal, 2017, whatevs
 \end{trivlist}
