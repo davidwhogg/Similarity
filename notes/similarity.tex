@@ -480,15 +480,16 @@ you don't care about or want to ignore.  How might we
 determine\footnote{Recall that we must determine these in order to use
   the method and results in this \documentname: It is literally part
   of the assumptions that we have acceptable estimates of $V$ and
-  $W$.} these tensors?
+  $W$ before we start.} these tensors?
 
 A full treatment of how you might obtain and assess prior variance $V$
 and nuisance variance $W$ are firmly outside the scope of this
 \documentname. However, here are some comments of possible relevance:
-First, if your observations are precise, and the population is
-broad in most or all dimensions, then just take the limit of large $V$
-and $\chi^2$ (though with variance $C\equiv C_1 + C_2 + W$). This is
-very often the case when the data are low-dimensional ($D$ is a few).
+First, if your observations are precise, and the population is broad
+in most or all dimensions, then just take the limit of large $V$. As
+noted above, if you do this, you get $\chi^2$ (though with variance
+$C\equiv C_1 + C_2 + W$). This is very often a good strategy when the
+data are low-dimensional ($D$ is a few).
 
 Second, if your observations are precise, but you think that the prior
 variance $V$ is low-rank, use \acronym{PCA} on a representative data
@@ -509,28 +510,31 @@ signal-to-noise. It is less true in the case of finding chemical
 twins, because there the individual-element abundance measurements are
 noisy.
 
-Third, if this latter issue---that the observational scatter is
-biasing your $V$ estimate high---is a problem, you might want to do
-some kind of real inference to get $V$. That is, if components of $C$
-are as large as or larger than relevant components of $V$, you might
-want to build a model to infer $V$. We have written up examples of
-this (HOGG CITE XD, HMF); one of these examples could be applied to the
-chemical-twin case.
+Third, if this latter issue is a problem; that is, if the
+observational scatter is biasing your $V$ estimate high, you might
+want to do some kind of real inference to get $V$. That is, if
+components of $C$ are as large as or larger than relevant components
+of $V$, you might want to build a model to infer $V$, using as
+training data some representative sample of your observations. We have
+written up examples of this (HOGG CITE XD, HMF); one of these examples
+could be applied to the chemical-twin case.
 
 Fourth, I should comment that estimation of $W$ is more
 problematic. Generally you won't have a sensitive scalar $Q$ if $W$ is
 large in bad ways. That is, if $W$ has large eigenvalues associated
-with eigenvectors that projects strongly onto the eigenbasis of $V$,
+with eigenvectors that project strongly onto the eigenbasis of $V$,
 there won't be much discriminative power (the product $V\cdot\inv{C}$
 will become small). So ideally $W$ is low in rank. There is no magic
 method for finding the low-rank sub-space; it is problem-dependent. In
 the case of finding chemical twins, we know that stars born in the
 same star cluster have extremely similar chemical abundances, but in
 detail there are tiny differences along certain directions in
-chemical-abundance space. In this case, empirical differences among
-stars that are known to have common origin can be inspected or
-\acronym{PCA}-ed or modeled statistically to develop an estimate for
-$W$.
+chemical-abundance space (Ness \etal, 2017). In this case, empirical
+differences among stars that are known to have common origin can be
+inspected or \acronym{PCA}-ed or modeled statistically to develop an
+estimate for $W$. The \emph{most} ideal case is that both $V$ and $W$
+are low-rank, and their bases are orthogonal. Then $W$ doesn't hurt
+you at all.
 
 \paragraph{Relaxing the assumptions:}
 We began the description of the methods presented in this
