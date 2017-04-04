@@ -152,11 +152,11 @@ Please approach it with that expectation.
 
 \paragraph{Assumptions:}
 I am going to make the following assumptions%
-\footnote{It is my view that the only sense in which a data analysis
+\footnote{It is my view that a data-analysis method or code
   can be said to be \emph{correct} or (heaven forbid)
-  ``\emph{optimal}'' (yes, I am using \emph{scare quotes}) is if there
-  is a sufficiently clear set of explicitly stated assumptions such
-  that the method can be shown to be correct or optimal \emph{under
+  ``\emph{optimal}'' (yes, I am using \emph{scare quotes}) only if there
+  is a sufficiently clear set of (explicitly stated) assumptions such
+  that the method or code can be shown to be correct or optimal \emph{under
   those explicit assumptions}. That is, we can't talk about doing
   something correctly if we can't set out clearly the rules are under which
   correctness can be defined. Therefore the assumptions laid out here
@@ -207,12 +207,16 @@ low-rank if it can be written as
 V &=& \tra{R}\cdot\Lambda\cdot R
 \label{eq:lowrank}\quad ,
 \end{eqnarray}
-where $R$ is rectangular, and $\Lambda$ is a diagonal matrix that is
+where $R$ is rectangular, and $\Lambda$ is a diagonal matrix%
+\footnote{Actually, $\Lambda$ need not be diagonal, but let's imagine
+  that it is, for simplicity, here and later. It is always possible for
+  you to \emph{make} it diagonal, by choosing $R$ wisely.}
+that is
 smaller in dimension than $V$. A place where typical physicists have
 encountered low-rank matrices is when they have performed principal
 components analysis (\acronym{PCA}) or singular value decomposition
 (\acronym{SVD})\footnote{The Wikipedia pages on \acronym{PCA}, \acronym{SVD}, and other
-  linear algebra operations mentioned in this note are all
+  linear-algebra operations mentioned in this note are all
   excellent.}, taken only the top $K$ eigenvectors, and re-built an
 approximation to the variance tensor or matrix that they started with.
 When parts of this problem are low-rank, there will be small
@@ -407,7 +411,7 @@ compute.
 Another piece of unsolicited advice: When any matrix $C$ or $\Lambda$
 is diagonal, don't instantiate it as a full matrix with almost every
 element zero, and don't invert it using the inversion code in your
-linear algebra library: Invert the diagonal and keep it just as a list
+linear-algebra library: Invert the diagonal and keep it just as a list
 of diagonal elements! That's just good code practice.
 
 Yet another piece of unsolicited advice: It is often and usually
