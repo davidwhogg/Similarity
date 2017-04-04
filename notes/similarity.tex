@@ -19,6 +19,9 @@
 \newcommand{\documentname}{\textsl{Note}}
 \newcommand{\equationname}{equation}
 \newcommand{\etal}{\foreign{et al.}}
+\linespread{1.08}
+\setlength{\parindent}{1.1\baselineskip}
+\sloppy\sloppypar\raggedbottom\frenchspacing
 
 % math
 \newcommand{\tra}[1]{{#1}^{\mathsf{T}}}
@@ -28,7 +31,7 @@
 \newcommand{\dd}{\mathrm{d}}
 \newcommand{\normal}{\mathcal{N}}
 
-\begin{document}\sloppy\sloppypar\raggedbottom\frenchspacing
+\begin{document}
 
 \section*{\raggedright Data Analysis Recipes:
   How similar are two noisily observed vectors?%
@@ -44,8 +47,6 @@ am indebted to Dan Foreman-Mackey (UW) and Hans-Walter Rix (MPIA).}}\\
   Center for Data Science, New York University \\
   Flatiron Institute, a division of the Simons Foundation \\
   Max-Planck-Institut f\"ur Astronomie, Heidelberg}
-
-\bigskip
 
 \paragraph{Abstract:}
 I present a general (although assumption-laden) method for asking the
@@ -466,8 +467,31 @@ forward or save a factorization.\footnote{Another piece of advice, but
   an exponentiation of the \code{slogdet()} operation anyway, and
   subject to unpleasant underflows or overflows.}
 
-\paragraph{Stellar spectra and abundances:}
-HOGG: TBD: SAY THINGS ABOUT THE SPECIFIC CASES OF Ness AND Hawkins.
+\paragraph{Priors and intrinsic scatter:}
+For the benefit of the astrophysicists---or those who have been dying
+of suspense---I now return to the original motivating problems to make
+a few comments about the scientific implementation of these
+methods. While astrophysicists are very good at delivering estimates
+of the observational uncertainty variance tensors $C_1$ and $C_2$, it
+is another matter entirely to determine the variance $V$ of the prior
+over true spectra, or the variance $W$ of the true differences that
+you don't care about or want to ignore.  How might we
+determine\footote{Recall that we must determine these in order to use
+  the method and results in this \documentname: It is literally part
+  of the assumptions that we have acceptable estimates of $V$ and
+  $W$.} these tensors?
+
+I hereby define the scope of this \documentname\ such that these
+questions are out of scope!
+
+Okay, that's not fair. While leaving a full treatment outside the
+scope, here are some comments of possible relevance: FIRST: USE V=INFINITY IF RELEVANT.
+
+SECOND: USE PCA OR EQUIVALENT IF $V\gg C$
+
+THIRD: FIND $W$ BY REGRESSION OR SVM OR SOMETHING LIKE THAT IF DATA ARE GOOD.
+
+FOURTH: BUILD A REAL MODEL IF NONE OF THE ABOVE. SEE HMF AND XD PAPERS.
 
 \paragraph{Bibliography}
 \begin{trivlist}\itemsep=0ex
