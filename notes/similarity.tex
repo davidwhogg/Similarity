@@ -468,19 +468,24 @@ forward or save a factorization.\footnote{Another piece of advice, but
   an exponentiation of the \code{slogdet()} operation anyway, and
   subject to unpleasant underflows or overflows.}
 
-\paragraph{Priors and intrinsic scatter:}
-For the benefit of the astrophysicists---or those who have been dying
-of suspense---I now return to the original motivating problems to make
-a few comments about the scientific implementation of these
-methods. While astrophysicists are very good at delivering estimates
+\paragraph{Prior and intrinsic scatter:}
+While astrophysicists---and other natural scientists---are
+very good at delivering estimates
 of the observational uncertainty variance tensors $C_1$ and $C_2$, it
 is another matter entirely to determine the variance $V$ of the prior
 over true spectra, or the variance $W$ of the true differences that
-you don't care about or want to ignore.  How might we
-determine\footnote{Recall that we must determine these in order to use
-  the method and results in this \documentname: It is literally part
-  of the assumptions that we have acceptable estimates of $V$ and
-  $W$ before we start.} these tensors?
+you don't care about or want to ignore.%
+\footnote{In many cases, of course, even the uncertainty estimates
+  $C_1$ and $C_2$ are poor, or under-estimated, or made under
+  unrealistic assumptions. That problem is out of scope, but there are
+  also many empirical and sensible ways to estimate or adjust these
+  tensors too, given a good set of data. One of the best ways is by
+  looking at repeat observations!}
+How might we determine%
+\footnote{Recall that we must determine these in order to use the
+  method and results in this \documentname: It is literally part of
+  the assumptions that we have acceptable estimates of $V$ and $W$
+  before we start.} these tensors?
 
 A full treatment of how you might obtain and assess prior variance $V$
 and nuisance variance $W$ are firmly outside the scope of this
@@ -500,9 +505,18 @@ $V$ out of those top $K$ eigenvalues $\lambda_k$ and eigenvectors $e_k$ by
   V &=& \sum_{k=1}^K \lambda_k\,e_k\cdot\tra{e_k}
 \quad .
 \end{eqnarray}
-This has the disadvantage that it gives an approximation to the
-empirical variance, which has both true-scatter and
-observational-scatter contributions. But this approach is often
+(Recall that vectors like $e_k$ are always column vectors.)
+This has the advantage that it is super-simple, but the
+disadvantage that it gives an approximation to the
+\emph{empirical} variance, which has both true-scatter and
+observational-scatter contributions.%
+\footnote{I am a big critic of \acronym{PCA}. It describes your
+  empirical variance---that is, the variance in your data set coming
+  from all sources of variance combined. It doesn't distinguish
+  \emph{sources} or \emph{causes} of variance. It involves no
+  inference. That makes it easy and simple and fast, but also usually
+  wrong.}
+But this approach is often
 appropriate. In the case of finding stellar stunt doubles (identical
 spectra) in the \acronym{APOGEE} Survey, this is a possibly acceptable
 method, simply because the spectra are very high in
@@ -510,8 +524,8 @@ signal-to-noise. It is less true in the case of finding chemical
 twins, because there the individual-element abundance measurements are
 noisy.
 
-Third, if this latter issue is a problem; that is, if the
-observational scatter is biasing your $V$ estimate high, you might
+Third, if this latter issue is a problem---that is, if the
+observational scatter is biasing your $V$ estimate high---you might
 want to do some kind of real inference to get $V$. That is, if
 components of $C$ are as large as or larger than relevant components
 of $V$, you might want to build a model to infer $V$, using as
@@ -524,7 +538,10 @@ problematic. Generally you won't have a sensitive scalar $Q$ if $W$ is
 large in bad ways. That is, if $W$ has large eigenvalues associated
 with eigenvectors that project strongly onto the eigenbasis of $V$,
 there won't be much discriminative power (the product $V\cdot\inv{C}$
-will become small). So ideally $W$ is low in rank. There is no magic
+will become small).%
+\footnote{It is left as an exercise to the reader to argue this out in detail.}
+So ideally $W$ is low in rank (or, even better,
+actually zero). There is no magic
 method for finding the low-rank sub-space; it is problem-dependent. In
 the case of finding chemical twins, we know that stars born in the
 same star cluster have extremely similar chemical abundances, but in
@@ -542,16 +559,20 @@ We began the description of the methods presented in this
 assumptions, and can we relax them?
 
 The principal, over-riding assumption is that everything is Gaussian:
-Both observational uncertainties, the prior, and the nuisance
+The observational uncertainties, the prior, and the nuisance
 (intrinsic scatter). This assumption is required for any fast
-method. There are other options that might be convex, and there are
+method. There are other options that might be nearly as simple to implement,%
+\footnote{Search terms like ``L1 regularization'' and ``the Lasso''
+  are words that spring to mind. These techniques are used in the
+  compressed sensing and convex optimization worlds.}
+and there are
 definitely other choices that are more accurate in many situations,
 but most deviations from Gaussianity lead to either mathematical
 intractability, or bad slowness. That said, if the data contain
 substantial outliers (large skew or kurtosis), it might be necessary
-to take into account, depending on your goals. It is usually worth
+to take these into account, depending on your goals. It is usually worth
 trying the Gaussian case first at least, and then inspecting the
-output and issues.
+output and issues. Outliers usually appear in obvious ways.
 
 If you must depart from Gaussianity, I would recommend starting with
 mixtures of Gaussians. These retain many of the valuable properties of
