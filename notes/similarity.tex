@@ -79,7 +79,7 @@ the \project{Gaia} Mission (HOGG CITE), that have identical spatial
 velocities.
 Another collaboration (Ness \etal, 2017) wanted to find pairs
 of stars, noisily observed by the \project{\acronym{APOGEE}}
-spectrograph (HOGG CITE), that have identical chemical abundances, despite the fact
+spectrograph (Majewski \etal, 2015), that have identical chemical abundances, despite the fact
 that (as a result of their different surface temperatures and surface
 gravities) they don't in fact look similar.
 Yet another (Hawkins \etal, in progress) has wanted to find stars that
@@ -105,7 +105,7 @@ objects observed are intrinsically identical? Would they appear
 identical if we had better data?\footnote{I found myself saying,
   recently, that in an observational science (like astronomy), you
   have to define the words ``true'' and ``truly'' so that they can be
-  operationally satisfied (and we did so, in HOGG CITE DFM).
+  operationally satisfied (and we did so, in Foreman-Mackey \etal, 2014).
   Are two stars \emph{truly} identical?  I
   find that I want always to convert such questions to
   counter-factuals about far better data: Will the two stars' data
@@ -230,7 +230,7 @@ computational tractability.
   infinite eigenvalues; we will write down equations that are safe to
   these possibilities. By some magic or algorithm\footnote{I have
     developed two relevant algorithms here. One is called Extreme
-    Deconvolution (HOGG CITE), and one is called Heteroskedastic
+    Deconvolution (Bovy \etal 2011), and one is called Heteroskedastic
     Matrix Factorization (HOGG CITE).} or intuition, the mean vector
   $\mu$ and variance tensor $\frac{1}{2}\,V$ are known in advance.
 \item \emph{Intrinsic scatter:} There might be certain kinds of differences
@@ -540,8 +540,8 @@ want to do some kind of real inference to get $V$. That is, if
 components of $C$ are as large as or larger than relevant components
 of $V$, you might want to build a model to infer $V$, using as
 training data some representative sample of your observations. We have
-written up examples of this (HOGG CITE XD, HMF); one of these examples
-could be applied to the chemical-twin case.
+written up examples of this (Bovy \etal, 2011; Tsalmantza \etal, HOGG CITE);
+one of these examples could be applied to the chemical-twin case.
 
 Fourth, I should comment that estimation of $W$ is more
 problematic. Generally you won't have a sensitive scalar $Q$ if $W$ is
@@ -590,7 +590,10 @@ Gaussians and just elevate some of our linear algebra-expressions up
 to large sums of linear-algebra expressions. I used the word ``just''
 there, but the derivations might be challenging combinatorically, if
 all four variances (two observational, one prior, and one nuisance)
-all elevate to Gaussian mixtures.
+all elevate to Gaussian mixtures.\footnote{Because our scalar $Q$ is
+  related to the logarithm of a probability, the new scalar that would
+  appear in the mixture-of-Gaussians case would be a \code{logsumexp()}
+  of $Q$-like terms, with weights.}
 
 In many cases (like for instance in Oh \etal, 2017), there are
 additional non-linear parameters that affect either the data, or the
@@ -615,17 +618,24 @@ current scope. That said, there are lots of great packages and growing
 community knowledge about such approaches. For problems like these,
 hierarchical models are the long-term solution.
 
+\newcommand{\arXiv}[1]{\href{http://arxiv.org/abs/#1}{\textsl{arXiv}:#1}}
 \paragraph{Bibliography}
-\begin{trivlist}\itemsep=0ex
-\item APOGEE
-\item Bovy \etal, XD
-\item Foreman-Mackey \etal, exopop
+\begin{list}{}{\itemsep=0pt \parskip=0pt \parsep=0pt \leftmargin=\parindent \itemindent=-\parindent}
+\item Bovy,~J., Hogg,~D.~W., \& Roweis,~S.~T., 2011,
+  Extreme deconvolution: Inferring complete distribution functions from noisy, heterogeneous and incomplete observations,
+  \textit{Ann. Appl. Stat.} \textbf{5}(2B), 1657--1677 (\arXiv{0905.2979}).
+\item Foreman-Mackey,~D., Hogg,~D.~W., \& Morton,~T.~D., 2014,
+  Exoplanet Population Inference and the Abundance of Earth Analogs from Noisy, Incomplete Catalogs,
+  \textit{Astrophys. J.} \textbf{795}(1), 64 (\arXiv{1406.3020}).
 \item Gaia
 \item Kusse \& Westweg, whatevs
 \item Lang \etal, 2010?, \url{Astrometry.net}
+\item Majewski,~S.~R., \etal, 2015,
+  The Apache Point Observatory Galactic Evolution Experiment (\acronym{APOGEE}),
+  \arXiv{1509.05420}.
 \item Ness \etal, 2017, whatevs
 \item Tsalmantza \etal, HMF
 \item Oh \etal, 2017, whatevs
-\end{trivlist}
+\end{list}
 
 \end{document}
