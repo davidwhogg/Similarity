@@ -506,13 +506,16 @@ data are low-dimensional ($D$ is a few).
 Second, if your observations are precise, but you think that the prior
 variance $V$ is low-rank, use \acronym{PCA} on a representative data
 sample---that is, a representative set of observations. Inspect the
-eigenvalues out of \acronym{PCA}, decide where to cut $K$, and build
+eigenvalues out of \acronym{PCA}, decide on the number $K$ of eigenvalues
+you are going to keep, and build
 $V$ out of those top $K$ eigenvalues $\lambda_k$ and eigenvectors $e_k$ by
 \begin{eqnarray}
   V &=& \sum_{k=1}^K \lambda_k\,e_k\cdot\tra{e_k}
 \quad .
 \end{eqnarray}
-(Recall that vectors like $e_k$ are always column vectors.)
+(Recall that vectors like $e_k$ are always column vectors, so that $e_k\cdot\tra{e_k}$
+is a square matrix outer product.\footnote{Here we are using the matrix notation and
+  conventions I learned from HOGG CITE KUSSE.})
 This has the advantage that it is super-simple, but the
 disadvantage that it gives an approximation to the
 \emph{empirical} variance, which has both true-scatter and
@@ -614,8 +617,14 @@ hierarchical models are the long-term solution.
 
 \paragraph{Bibliography}
 \begin{trivlist}\itemsep=0ex
+\item APOGEE
+\item Bovy \etal, XD
+\item Foreman-Mackey \etal, exopop
+\item Gaia
+\item Kusse \& Westweg, whatevs
 \item Lang \etal, 2010?, \url{Astrometry.net}
 \item Ness \etal, 2017, whatevs
+\item Tsalmantza \etal, HMF
 \item Oh \etal, 2017, whatevs
 \end{trivlist}
 
