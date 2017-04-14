@@ -75,7 +75,7 @@ determine that two objects, both of which have been noisily observed,
 are in fact identical, in respects that we care about. One collaboration
 (Oh \etal, 2017)
 wanted to find pairs of stars, noisily observed by
-the \project{Gaia} Mission (HOGG CITE), that have identical spatial
+the \project{Gaia} Mission (\project{Gaia} Collaboration, 2016), that have identical spatial
 velocities.
 Another collaboration (Ness \etal, 2017) wanted to find pairs
 of stars, noisily observed by the \project{\acronym{APOGEE}}
@@ -422,7 +422,7 @@ this in terms of false-positive and false-negative rate, which maps
 onto the receiver-operator characteristic (\acronym{ROC}) Others think
 about this in terms of utility; I fall into this latter
 category\footnote{Dustin Lang and I have done so explicitly in the
-  astrophysics literature (CITE ASTROMETRY.NET).},
+  astrophysics literature (Lang \etal, 2010).},
 but suffice it to say that any threshold-setting necessarily happens
 outside the context of probabilistic inference.
 
@@ -513,13 +513,13 @@ $V$ out of those top $K$ eigenvalues $\lambda_k$ and eigenvectors $e_k$ by
   V &=& \sum_{k=1}^K \lambda_k\,e_k\cdot\tra{e_k}
 \quad .
 \end{eqnarray}
-(Recall that vectors like $e_k$ are always column vectors, so that $e_k\cdot\tra{e_k}$
-is a square matrix outer product.\footnote{Here we are using the matrix notation and
-  conventions I learned from HOGG CITE KUSSE.})
-This has the advantage that it is super-simple, but the
-disadvantage that it gives an approximation to the
-\emph{empirical} variance, which has both true-scatter and
-observational-scatter contributions.%
+(Recall that vectors like $e_k$ are always column vectors, so that
+$e_k\cdot\tra{e_k}$ is a square matrix outer product.\footnote{Here we
+  are using the matrix notation and conventions I learned from Kusse
+  \& Westwig (2006). Well, really I got it from an earlier edition than the 2006 edition!})
+This has the advantage that it is super-simple, but the disadvantage
+that it gives an approximation to the \emph{empirical} variance, which
+has both true-scatter and observational-scatter contributions.%
 \footnote{I am a big critic of \acronym{PCA}. It describes your
   empirical variance---that is, the variance in your data set coming
   from all sources of variance combined. It doesn't distinguish
@@ -528,7 +528,7 @@ observational-scatter contributions.%
   wrong.}
 But this approach is often
 appropriate. In the case of finding stellar stunt doubles (identical
-spectra) in the \acronym{APOGEE} Survey, this is a possibly acceptable
+spectra) in the \project{\acronym{APOGEE}} Survey, this is a possibly acceptable
 method, simply because the spectra are very high in
 signal-to-noise. It is less true in the case of finding chemical
 twins, because there the individual-element abundance measurements are
@@ -622,20 +622,28 @@ hierarchical models are the long-term solution.
 \paragraph{Bibliography}
 \begin{list}{}{\itemsep=0pt \parskip=0pt \parsep=0pt \leftmargin=\parindent \itemindent=-\parindent}
 \item Bovy,~J., Hogg,~D.~W., \& Roweis,~S.~T., 2011,
-  Extreme deconvolution: Inferring complete distribution functions from noisy, heterogeneous and incomplete observations,
+  \project{Extreme deconvolution}: Inferring complete distribution functions from noisy, heterogeneous and incomplete observations,
   \textit{Ann. Appl. Stat.} \textbf{5}(2B), 1657--1677 (\arXiv{0905.2979}).
 \item Foreman-Mackey,~D., Hogg,~D.~W., \& Morton,~T.~D., 2014,
-  Exoplanet Population Inference and the Abundance of Earth Analogs from Noisy, Incomplete Catalogs,
+  Exoplanet population inference and the abundance of earth analogs from noisy, incomplete catalogs,
   \textit{Astrophys. J.} \textbf{795}(1), 64 (\arXiv{1406.3020}).
-\item Gaia
-\item Kusse \& Westweg, whatevs
-\item Lang \etal, 2010?, \url{Astrometry.net}
+\item \project{Gaia} Collaboration, Brown,~A.~G.~A., \etal, 2016,
+  \project{Gaia} Data Release 1. Summary of the astrometric, photometric, and survey properties,
+  \textit{Astron. Astrophys.} \textbf{595}, A2 (\arXiv{1609.04172}).
+\item Kusse,~B.~R. \& Westwig,~E.~A., 2006,
+  \textit{Mathematical Physics: Applied Mathematics for Scientists and Engineers},
+  2ed, Wiley (\acronym{ISBN}: 978-3-527-40672-2)
+\item Lang,~D., Hogg,~D.~W., Mierle,~K., Blanton,~M., \& Roweis,~S., 2010,
+  \project{Astrometry.net}: Blind astrometric calibration of arbitrary astronomical images,
+  \textit{Astron. J.} \textbf{139}(5) 1782--1800 (\arXiv{0910.2233}).
 \item Majewski,~S.~R., \etal, 2015,
-  The Apache Point Observatory Galactic Evolution Experiment (\acronym{APOGEE}),
+  The \project{Apache Point Observatory Galactic Evolution Experiment} (\project{\acronym{APOGEE}}),
   \arXiv{1509.05420}.
-\item Ness \etal, 2017, whatevs
-\item Tsalmantza \etal, HMF
-\item Oh \etal, 2017, whatevs
+\item Ness,~M., \etal, 2017,
+  Galactic Doppelganger: The chemical similarity among field stars and among stars with a common birth origin,
+  \arXiv{1701.07829}.
+\item Tsalmantza \etal, HMF; HOGG
+\item Oh \etal, 2017, whatevs; HOGG
 \end{list}
 
 \end{document}
