@@ -35,7 +35,7 @@
 
 \section*{\raggedright Data Analysis Recipes:
   How similar are two noisily observed vectors?%
-\footnote{This \documentname\ is Copyright 2017 the author. Feel free to copy and
+\footnote{This \documentname\ is copyright 2017 the author. Feel free to copy and
 distribute it, provided that you make no changes to it whatsoever.}}
 
 \noindent
@@ -55,20 +55,20 @@ identical? My approach is to turn this question into a parameter
 estimation, estimating the (latent) difference between the objects,
 and evaluating the posterior density at vanishing difference. The
 method accounts both for the fact that the (latent, never
-instantiated) noiseless vectors are drawn from a compact pdf, and that
+instantiated) noiseless vectors are drawn from a compact pdf, and for the fact that
 there are differences in the vectors that might not be considered
 significant, either because of measurement noise, or because of
 intrinsic differences that somehow ``don't matter''. The approach
 makes heavy use of Gaussians for their mathematical simplicity. In a
 sensible limit, the answer reduces to pure chi-squared difference
-between the observations. I discuss the results in the context of some
+between the observations. I discuss the method and results in the context of some
 astrophysics problems---stellar spectroscopy (stellar twins) and
-chemical-abundance-space measurements (chemical tagging)---but it
+chemical-abundance-space measurements (chemical tagging)---but everything here
 should be accessible to any natural scientist.
 
 \paragraph{Introduction:}
 The subjective motivation for writing this \documentname\ is the odd coincidence
-that during this academic year\footnote{2016--2017}, three different collaborators
+that during this academic year\footnote{2016--2017}, three different groups
 have brought to me questions about \emph{identicality}: How do you
 determine that two objects, both of which have been noisily observed,
 are in fact identical, in respects that we care about. One collaboration
@@ -144,8 +144,8 @@ For various reasons that are (perhaps) badly justified\footnote{%
   choices made here and in what follows.}
 we are going
 to take the second approach in this \documentname. That is, we are
-going to estimate the difference between the objects given their
-(presumed noisy) measurements, and find out if that difference is
+going to estimate the true (vector) difference between the objects, given their
+(noisy) measurements, and find out if that difference is
 consistent with zero, or with the kind of difference that we would count
 as effectively zero (more on this below).
 
@@ -174,7 +174,12 @@ justifiable. The objections are manifold. One is that, as the data get
 better (the determinants of the $C_1$ and $C_2$ matrices get smaller),
 it becomes increasingly harder to conclude similarity or
 identicality. To this I say: \emph{Duh!} That will be true of any
-correct method. Another objection is that $\chi^2$ treats all elements
+correct method.\footnote{%
+  As some statisticians like to say: Chi-squared is just a measure of
+  the size of your data! That is, as you get more or better data,
+  chi-squared will generally increase and (in this case) the vectors will
+  tend to diverge.}
+Another objection is that $\chi^2$ treats all elements
 of the data (all directions in the vector space) identically, or at
 least weights them by their measurement quality rather than their
 \emph{usefulness for determining dissimilarity}. If some dimensions
@@ -210,14 +215,15 @@ computational tractability.
   mean and known variance tensors $C_1$ and $C_2$, respectively. The
   noise draws are independent (but not identically distributed). There
   are no outliers or non-Gaussianities, and the variance tensors are
-  not just known but correct. These covariance matrices can contain
+  not just known but \emph{correctly known}. These covariance matrices can contain
   infinite eigenvalues\footnote{HOGG: TBD: Say something about what an eigenvalue is,
     and in the special case of the diagonal matrix.} (that is,
   components or eigen-directions about which there is no information),
   but they probably shouldn't contain zero eigenvalues (that is,
-  directions about which there is perfect knowledge).
+  directions about which there is perfect knowledge or along which there is no noise).
 \item \emph{Prior:} The true vectors are drawn independently from a
-  Gaussian distribution of mean $\mu$ and variance tensor
+  Gaussian distribution of mean $\mu$ and variance tensor\footnote{%
+    I use half-$V$ here---and not $V$---to simplify expressions that follow. Trust me!}
   $\frac{1}{2}\,V$. This variance tensor might have have some zero
   eigenvalues (that is, it might be low-rank), or it might have some
   infinite eigenvalues; we will write down equations that are safe to
@@ -226,7 +232,7 @@ computational tractability.
     Deconvolution (HOGG CITE), and one is called Heteroskedastic
     Matrix Factorization (HOGG CITE).} or intuition, the mean vector
   $\mu$ and variance tensor $\frac{1}{2}\,V$ are known in advance.
-\item \emph{Intrinsic scatter:} There are certain kinds of differences
+\item \emph{Intrinsic scatter:} There might be certain kinds of differences
   between vectors that are unimportant to us. That is, if they are
   different in these uninteresting ways, we don't consider them to be
   different. We will assume that these intrinsic differences are also
