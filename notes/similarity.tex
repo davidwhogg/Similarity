@@ -2,13 +2,11 @@
 % Copyright 2017 the author.
 
 % # To-Do:
-% - find and fix all HOGG
-% - fix typesetting and content of bibliography
-% - re-check that abstract tells the whole story
-% - need to cite out to or refer to Sam's linear algebra and Gaussian notes
-% - possibly refer to the refractory elements things as an example of $W$?
-% - give more context about what happens if you have different Vs for different pairs? Do you modify the threshold?
-% - give more context about how false positive and false negative rates vary with measurement uncertainty.
+% - deal with HOGG CITE etc..
+% - re-check that abstract tells the whole story.
+% - need to cite out to or refer to Sam's linear algebra and Gaussian notes.
+% - get comments from Ness, Bedell, Rix.
+% - ask Leistedt to re-derive Q expression.
 
 \documentclass[12pt,letterpaper]{article}
 \usepackage[hidelinks]{hyperref}
@@ -73,7 +71,7 @@ The subjective motivation for writing this \documentname\ is the odd coincidence
 that during this academic year\footnote{2016--2017}, three different groups
 have brought to me questions about \emph{identicality}: How do you
 determine that two objects, both of which have been noisily observed,
-are in fact identical, in respects that we care about. One collaboration
+are in fact identical, in respects that we care about? One collaboration
 (Oh \etal, 2017)
 wanted to find pairs of stars, noisily observed by
 the \project{Gaia} Mission (\project{Gaia} Collaboration, 2016), that have identical spatial
@@ -90,8 +88,7 @@ directly. In all three of these cases, I gave advice, but in all three
 cases, I became slightly unhappy both with the advice I was giving, and
 also with the availability of extremely clear expositions on this subject
 in the libraries of astrophysicists.\footnote{But I must admit that I didn't
-  look very hard. If you want to explore these ideas more online, you could search
-  terms like ``p-value'', ``\acronym{ANOVA}'', and ``Bayesian inference''.}
+  look very hard.}
 It is my hope that this \documentname\ will be useful to researchers working
 outside---even far outside---the domain of astrophysics. These ideas and methods 
 are completely general.
@@ -218,8 +215,12 @@ computational tractability.
   noise draws are independent (but not identically distributed). There
   are no outliers or non-Gaussianities, and the variance tensors are
   not just known but \emph{correctly known}. These covariance matrices can contain
-  infinite eigenvalues\footnote{HOGG: TBD: Say something about what an eigenvalue is,
-    and in the special case of the diagonal matrix.} (that is,
+  infinite eigenvalues\footnote{%
+    If you don't remember what an eigenvalue or an eigenvector is,
+    consult \textit{Wikipedia} or any notes on linear algebra. In the
+    case of a perfectly diagonal matrix (all off-diagonal elements
+    vanish), the eigenvalues are the diagonal elements.}
+  (that is,
   components or eigen-directions about which there is no information),
   but they probably shouldn't contain zero eigenvalues (that is,
   directions about which there is perfect knowledge or along which there is no noise).
@@ -231,7 +232,7 @@ computational tractability.
   infinite eigenvalues; we will write down equations that are safe to
   these possibilities. By some magic or algorithm\footnote{I have
     developed two relevant algorithms here. One is called Extreme
-    Deconvolution (Bovy \etal 2011), and one is called Heteroskedastic
+    Deconvolution (Bovy \etal, 2011), and one is called Heteroskedastic
     Matrix Factorization (Tsalmantza \& Hogg, 2012).} or intuition, the mean vector
   $\mu$ and variance tensor $\frac{1}{2}\,V$ are known in advance.
 \item \emph{Intrinsic scatter:} There might be certain kinds of differences
@@ -427,6 +428,28 @@ category\footnote{Dustin Lang and I have done so explicitly in the
 but suffice it to say that any threshold-setting necessarily happens
 outside the context of probabilistic inference.
 
+Another comment about threshold-setting is that, in the context of
+fixed $V$ and $W$, vectors with different quality
+measurements---different noise tensors $C_1$ and $C_2$ will be found
+to be identical with different false-positive and false-negative rates
+(or, maybe, type-1 and type-2 error frequencies\footnote{%
+  Different communities have different names for these kinds of errors.
+  In astronomy, these are sometimes referred to as contamination and
+  incompleteness. I also see other terminologies in the engineering
+  world (HOGG INCLUDE PRECISION / PURITY or whatever).}
+) at any given
+threshold. That is, one threshold perhaps isn't the right tool for all
+jobs. Also, in different $V$ and $W$ contexts, a single threshold will
+deliver decisions or results with different qualities as $V$ and $W$
+change. That is, threshold-setting is not only non-trivial and
+necessarily heuristic, but those heuristics might end up delivering
+results that are themselves a strong function of $C_1$, $C_2$, $V$,
+and $W$. One consequence of all this is that if your data are
+heterogenous (that is, there is diversity in the noise variances),
+your results will also be heterogeneous. There will be no way, in
+general, to keep the false-positive and false-negative rate constant
+across any heterogenous sample.
+
 \paragraph{Linear algebra:}
 The patient reader may complain that there has already been enough
 linear algebra.\footnote{Even though there hasn't been nearly as much
@@ -443,7 +466,8 @@ inversion lemma\footnote{Also called the ``Woodbury Matrix Identity''
   and described usefully here:
   \url{https://en.wikipedia.org/wiki/Woodbury_matrix_identity}. I
   don't use the ``Woodbury'' name for this because I don't like
-  calling things after people's names when I don't have to.}
+  calling things after people's names when I don't have to. (One inconsistency:
+  I say ``Gaussian'' and not ``normal''. My excuse is: The word ``normal'' is over-loaded!)}
 \begin{eqnarray}
 \inv{[V + C]} &=& \inv{[\tra{R}\cdot\Lambda\cdot R + C]}
 \\
@@ -512,14 +536,22 @@ you are going to keep, and build
 $V$ out of those top $K$ eigenvalues $\lambda_k$ and eigenvectors $e_k$ by
 \begin{eqnarray}
   V &=& \sum_{k=1}^K \lambda_k\,e_k\cdot\tra{e_k}
-\quad .
+\\
+    &\equiv& \tra{R}\,\Lambda\,R
+\quad ,
 \end{eqnarray}
-(Recall that vectors like $e_k$ are always column vectors, so that
-$e_k\cdot\tra{e_k}$ is a square matrix outer product.\footnote{Here we
+where $\tra{R}$ is the $D\times K$ rectangular matrix that contains
+the $K$ eigenvectors $e_k$, and $\Lambda$ is the $K\times K$ diagonal matrix
+with the eigenvalues $\lambda_k$ on the diagonal\footnote{%
+  Compare to \equationname~(\ref{eq:lowrank})},
+and the reader is invited to recall
+that (here) vectors like $e_k$ are always column vectors, so that
+$e_k\cdot\tra{e_k}$ is a square matrix outer product.\footnote{We
   are using the matrix notation and conventions I learned from Kusse
   \& Westwig (2006). Well, really I got it from an earlier edition than the 2006 edition!})
-This has the advantage that it is super-simple, but the disadvantage
-that it gives an approximation to the \emph{empirical} variance, which
+This \acronym{PCA} approach
+has the advantage that it is super-simple, but the disadvantage
+that \acronym{PCA} gives an approximation to the \emph{empirical} variance, which
 has both true-scatter and observational-scatter contributions.%
 \footnote{I am a big critic of \acronym{PCA}. It describes your
   empirical variance---that is, the variance in your data set coming
@@ -557,7 +589,12 @@ method for finding the low-rank sub-space; it is problem-dependent. In
 the case of finding chemical twins, we know that stars born in the
 same star cluster have extremely similar chemical abundances, but in
 detail there are tiny differences along certain directions in
-chemical-abundance space (Ness \etal, 2017). In this case, empirical
+chemical-abundance space.\footnote{%
+  Some small differences are seen in our own work (Ness \etal, 2017), and
+  there are known differences that project (tantalizingly) onto the directions
+  in abundance space that are expected to be depleted or enhanced by planet
+  formation (HOGG CITE SOMETHING??)!}
+In this case, empirical
 differences among stars that are known to have common origin can be
 inspected or \acronym{PCA}-ed or modeled statistically to develop an
 estimate for $W$. The \emph{most} ideal case is that both $V$ and $W$
