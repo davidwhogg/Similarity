@@ -3,11 +3,15 @@
 
 % # To-Do:
 % - deal with HOGG CITE etc..
-% - re-check that abstract tells the whole story.
+% - re-check that abstract tells the whole story. Ness say: mention HB at end.
 % - need to cite out to or refer to Sam's linear algebra and Gaussian notes.
 % - idea that you could get a low-rank W out of a regression...?
-% - get comments from Ness, Bedell, Rix, Hawkins.
+% - get comments from Ness, Bedell, Hawkins.
 % - ask Leistedt to re-derive Q expression.
+% - go through comments from Semyeong Oh, and thank her.
+% - curse of dimensionality comments from Rix.
+% - say more about, and adjust in response to, the form in eq:scalar2
+% - should I be more explicit about the probabilistic regime of chemical tagging?
 
 \documentclass[12pt,letterpaper]{article}
 \usepackage[hidelinks]{hyperref}
@@ -309,12 +313,16 @@ $\epsilon$ and $\delta$. This marginalization produces
 \begin{eqnarray}
   p(\Delta\given y_1,y_2) &=& \normal(\Delta\given\mu,\Sigma)
 \\
-  \Sigma &\equiv& \inv{(\inv{[V]} + \inv{[C_1 + C_2 + W]})}
+  \Sigma &\equiv& \inv{[\inv{V} + \inv{C}]}
 \\
-  \mu &\equiv& \Sigma\cdot\inv{[C_1 + C_2 + W]}\cdot[y_1-y_2]
+  C &\equiv& C_1 + C_2 + W
+\\
+  \mu &\equiv& \Sigma\cdot\inv{C}\cdot[y_1-y_2]
 \quad ,
 \end{eqnarray}
-where $C$ is a variance matrix, and $\mu$ is an expectation value.
+where $\Sigma$ is a variance tensor, and $\mu$ is an expectation value,
+and we have defined $C$ to be the sum of the noise variances and the intrinsic
+variance.
 These results were found by making heavy use of the following exact
 identity\footnote{For which I owe great thanks to Boris Leistedt
   (NYU), and also my old friend Sam Roweis (deceased), whose notes on
@@ -366,6 +374,8 @@ perhaps the log of that:
 \label{eq:1}\\
     &=& \tra{[y_1-y_2]}\cdot\inv{[V + C]}\cdot V\cdot\inv{C}\cdot[y_1-y_2]
 \label{eq:scalar} \\
+    &=& \tra{[y_1-y_2]}\cdot\inv{[C + C\cdot\inv{V}\cdot C]}\cdot[y_1-y_2]
+\label{eq:scalar2} \\
   C &\equiv& C_1 + C_2 + W
 \quad ,
 \end{eqnarray}
@@ -378,10 +388,11 @@ our expression, and we have dropped some constants\footnote{The
   analysis were to be expanded to one in which any or all of those
   variance tensors was to be learned or inferred or marginalized out,
   these log-determinant terms could not be ignored. Just a word to the
-  wise.} and used some more matrix-algebra foo to get from
-  \equationname~(\ref{eq:1}) to (\ref{eq:scalar}).
+  wise.}
+and used some more matrix-algebra foo to get from
+\equationname~(\ref{eq:1}) to (\ref{eq:scalar}) to (\ref{eq:scalar2}).
 
-This scalar $Q$ of \equationname~(\ref{eq:scalar}) has lots of good properties,
+This scalar $Q$ of \equationname s~(\ref{eq:scalar}) and (\ref{eq:scalar2}) has lots of good properties,
 and begs various points of discussion:
 First, it is probabilistically justified, in the context of the explicit
 assumptions I listed in the Assumptions section, above. That beats most
