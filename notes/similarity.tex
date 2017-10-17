@@ -619,9 +619,13 @@ chemical-abundance space.\footnote{%
 In this case, empirical
 differences among stars that are known to have common origin can be
 inspected or \acronym{PCA}-ed or modeled statistically to develop an
-estimate for $W$. The \emph{most} ideal case is that both $V$ and $W$
+estimate for $W$. Or if the similar vectors might differ by differences
+in some kind of calibration or continuum-normalization, you can put low-rank
+information about the uncertainties in those calibration fits (projected into the
+vector domain) into the $R$ matrices that make up
+a low-rank representation of $W$. The \emph{most} ideal case is that both $V$ and $W$
 are low-rank, and their bases are orthogonal. Then $W$ doesn't hurt
-you at all.
+you at all!
 
 \paragraph{Relaxing the assumptions:}
 We began the description of the methods presented in this
@@ -668,8 +672,8 @@ maintaining those terms.
 
 In some sense the worst assumption in this document is that the four
 tensors $C_1$, $C_2$, $V$, and $W$ are all presumed to be known well.
-That is almost never true in any investigation I have been involved
-in.  If you want to infer these or marginalize them out, however, you
+That is almost never true in any investigation in which I have been involved!
+If you want to infer these or marginalize them out, however, you
 need to build a hierarchical noise and population model on top of
 everything I have written here. You will need your log-determinant
 terms, and also priors over new parameters. This gets into the full
